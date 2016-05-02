@@ -1,0 +1,17 @@
+/actionListeners/
+/actions/
+/database/
+/exceptions/
+/main/
+/mvc_dialogs/
+/mvc_menu_students/
+/mvc_students/
+/mvc_tests/
+/mvc_testsCategories/
+/tables/
+/tablesStructures/
+/ui_components/
+/ui_done_tests/
+/ui_main/
+/ui_menuPanels/
+/ui_searchRecord/
