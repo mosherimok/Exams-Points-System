@@ -13,6 +13,12 @@ public class TestCategory extends TableStructure{
 	private Integer points85;
 	private Integer points95;
 	
+	public TestCategory(){}
+	
+	public TestCategory(Object[] values){
+		initFromArray(values);
+	}
+	
 	public String getCategoryName() {
 		return categoryName;
 	}
@@ -50,10 +56,10 @@ public class TestCategory extends TableStructure{
 				e.printStackTrace();
 				return;
 			}
-		categoryName = values[0].toString();
-		points75 = (int)values[1];
-		points85= (int)values[2];
-		points95 = (int)values[3];
+		setCategoryName(values[0].toString());
+		setPoints75((int)values[1]);
+		setPoints85((int)values[2]);
+		setPoints95((int)values[3]);
 	}
 	
 	@Override
@@ -65,13 +71,11 @@ public class TestCategory extends TableStructure{
 	public String getTableName() {
 		return "TestsCategories";
 	}
+
+
 	@Override
-	public String[] getPrimaryKeyName() {
-		return new String[]{"categoryName"};
-	}
-	@Override
-	public Object[] getPrimaryKeyValue() {
-		return new String[]{categoryName};
+	public PrimaryKey getPrimaryKey() {
+		return new PrimaryKey("categoryName",categoryName);
 	}
 
 }

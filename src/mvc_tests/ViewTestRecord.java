@@ -51,6 +51,12 @@ public class ViewTestRecord extends View {
 		initGUI();
 	}
 	
+	public ViewTestRecord(String[] categories) {
+		super(RECORD_NAME);
+		initGUI();
+		setCategories(categories);
+	}
+	
 	private void initGUI(){
 		setBounds(100, 100, 338, 200);
 		getContentPane().setLayout(new BorderLayout());
@@ -123,7 +129,7 @@ public class ViewTestRecord extends View {
 			buttonPane.setLayout(new FlowLayout(FlowLayout.CENTER));
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
 			{
-				okButton = new JButton("OK");
+//				okButton = new JButton("OK");
 				buttonPane.add(okButton);
 				getRootPane().setDefaultButton(okButton);
 			}
@@ -175,7 +181,6 @@ public class ViewTestRecord extends View {
 		Test test = (Test) structure;
 		textField_testName.setText(test.getName());
 		comboBox_categories.setSelectedItem(test.getCategory());
-		System.out.println(test.getTestDate());
 		try {
 			((SpinnerDateModel)(spinner_testDate.getModel())).
 				setValue(new SimpleDateFormat(DATE_FORMAT).parse(test.getTestDate()));
@@ -186,7 +191,8 @@ public class ViewTestRecord extends View {
 	}
 	
 	public void setCategories(String[] categories){
-		comboBox_categories.setModel(new DefaultComboBoxModel<String>(categories));
+		if (categories!=null)
+			comboBox_categories.setModel(new DefaultComboBoxModel<String>(categories));
 	}
 
 }

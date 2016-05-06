@@ -20,7 +20,8 @@ public class ModelModifyTestCategory extends Model implements ModifyRecord{
 	public ModelModifyTestCategory(TestCategory tc) {
 		super(TableGetter.getTable(TblTestsCategories.class));
 		setStructure(tc);
-		condition.addCondition(tc.getPrimaryKeyName()[0], tc.getPrimaryKeyValue()[0]);
+//		condition.addCondition(tc.getPrimaryKeyName()[0], tc.getPrimaryKeyValue()[0]);
+		condition.addCondition(tc.getPrimaryKey());
 	}
 
 	@Override

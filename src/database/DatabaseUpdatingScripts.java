@@ -5,11 +5,17 @@ import tablesStructures.TableStructure;
 public class DatabaseUpdatingScripts {
 
 	public static String insertInto(TableStructure structure){
-		String script = "INSERT INTO " + structure.getTableName() + " VALUES(";
-		for(Object obj : structure){
-			script+=String.format("'%s',", obj.toString());
+		String script = "INSERT INTO " + structure.getTableName()+"(";
+		for(String col: structure.getTableObject().getColumnsIdentifiers()){
+			script+=col+",";
 		}
-		return script.substring(0,script.length()-1)+")"; // -2 for the last ',' and white-space.
+		script = script.substring(0,script.length()-1)+") Values(";
+		for(Object obj : structure){
+			if(obj!=null)
+				script+=String.format("'%s',", obj.toString());
+		}
+		script = script.substring(0,script.length()-1)+")"; // -2 for the last ',' and white-space.
+		return script;
 	}
 	
 	/**
@@ -23,8 +29,11 @@ public class DatabaseUpdatingScripts {
 		String[] columnsNames = newStructure.getTableObject().getColumnsIdentifiers();
 		int index = 0;
 		for(Object obj : newStructure){
-			if(!obj.equals("null"))
-				script+=String.format("%s='%s',",columnsNames[index],obj);
+			if(obj!=null){
+				System.out.println(index);
+				script+=String.format("%s='%s',",columnsNames[index],obj.toString());
+			}
+
 			index++;
 		}
 		script =script.substring(0, script.length()-1) + " " +condition.toString();

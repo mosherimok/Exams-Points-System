@@ -1,5 +1,8 @@
 package tablesStructures;
 
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+
 import tables.Table;
 import tables.TableGetter;
 import tables.TblTests;
@@ -11,6 +14,12 @@ public class Test extends TableStructure{
 	private String name;
 	private String category;
 	private String testDate;
+	
+	public Test(){}
+	
+	public Test(Object[] values){
+		initFromArray(values);
+	}
 	
 	public String getName() {
 		return name;
@@ -43,17 +52,24 @@ public class Test extends TableStructure{
 
 	@Override
 	public void initFromArray(Object[] values) {
-		if(values.length!=4)
+		if(values.length<3)
 			try {
-				throw new Exception("Not enougth elements");
+				throw new Exception("Not enougth values");
 			} catch (Exception e) {
 				e.printStackTrace();
 				return;
 			}
-		testid = (int)values[0];
-		name = values[1].toString();
-		category=values[2].toString();
-		testDate = values[3].toString();
+		if(values.length==4){
+			testid=(int)values[0];
+			setName(values[1].toString());
+			setCategory(values[2].toString());
+			setTestDate(values[3].toString());
+		}
+		else{
+			setName(values[0].toString());
+			setCategory(values[1].toString());
+			setTestDate(values[2].toString());
+		}
 	}
 
 	@Override
@@ -68,13 +84,30 @@ public class Test extends TableStructure{
 	}
 
 	@Override
-	public String[] getPrimaryKeyName() {
-		return new String[]{"name","Category","testDate"};
+	public PrimaryKey getPrimaryKey() {
+		PrimaryKey prim = new PrimaryKey();
+		prim.addKey("category", category);
+		prim.addKey("testDate", testDate);
+		return prim;
 	}
-
+	
 	@Override
-	public Object[] getPrimaryKeyValue() {
-		return new Object[]{name,category,testDate};
+	public Iterator<Object> iterator() {
+		return new Iterator<Object>() {
+			Object[] values = getValues();
+			int index= 1;
+			@Override
+			public Object next() {
+				if(index==values.length)
+					throw new NoSuchElementException("No more elements!");
+				return values[index++];
+			}
+			
+			@Override
+			public boolean hasNext() {
+				return index<values.length;
+			}
+		};
 	}
 	
 }

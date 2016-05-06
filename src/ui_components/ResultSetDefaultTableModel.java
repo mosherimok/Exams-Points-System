@@ -9,10 +9,12 @@ import tablesStructures.TableStructure;
 public class ResultSetDefaultTableModel extends DefaultTableModel{
 
 	private static final long serialVersionUID = 1L;
+	private Table sqlTable;
 	
 	public ResultSetDefaultTableModel(Table table) {
-		refreshData(table);
-		initColumnsLabels(table);
+		this.sqlTable=table;
+		refreshData();
+		initColumnsLabels();
 	}
 	
 	/*public String getColumnName(int col){
@@ -52,8 +54,8 @@ public class ResultSetDefaultTableModel extends DefaultTableModel{
 	}
 	
 	@SuppressWarnings("unchecked")
-	private void initColumnsLabels(Table table){
-		for(String label : table.getColumnsLabels()){
+	private void initColumnsLabels(){
+		for(String label : sqlTable.getColumnsLabels()){
 			columnIdentifiers.addElement(label);
 		}
 	}
@@ -63,8 +65,8 @@ public class ResultSetDefaultTableModel extends DefaultTableModel{
 		return ((TableStructure)dataVector.get(row)).getValues()[column];
 	}
 	
-	public void refreshData(Table table){
-		dataVector = DatabaseDataFetching.getAllTableData(table.getTableName(),table.getTableStructureName());
+	public void refreshData(){
+		dataVector = DatabaseDataFetching.getAllTableData(sqlTable);
 	}
 
 	public TableStructure getRowStructure(int row){

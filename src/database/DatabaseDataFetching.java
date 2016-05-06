@@ -7,15 +7,16 @@ import java.util.ArrayList;
 import java.util.Vector;
 
 import exceptions.InvalidStructure;
+import tables.Table;
 import tablesStructures.TableStructure;
 
 public class DatabaseDataFetching {
 
 	public static <Structure extends tablesStructures.TableStructure> 
-					Vector<Structure> getAllTableData(String tableName,String tableStructure){
+					Vector<Structure> getAllTableData(Table table){
 		Vector<Structure> data = new Vector<>();
 			//TODO:improvement in retreiving table name.
-			String script = "SELECT * FROM " + tableName;
+			String script = "SELECT * FROM " + table.getTableName();
 			StatementHandle handle = new StatementHandle() {
 				
 				@Override
@@ -28,13 +29,9 @@ public class DatabaseDataFetching {
 							values[i] = result.getObject(i+1);
 						}
 						Structure structure;
-						try {
-							structure = (Structure) TableStructure.createObjectByType(tableStructure);
-							structure.initFromArray(values);
-							data.addElement(structure);
-						} catch (InvalidStructure e) {
-							e.printStackTrace();
-						}
+						structure = (Structure) table.createTableStructure(values);
+						data.addElement(structure);
+
 						
 					}
 				}

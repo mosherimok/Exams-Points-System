@@ -1,11 +1,14 @@
 package tables;
 
+import tablesStructures.DoneTest;
+import tablesStructures.Student;
+import tablesStructures.TableStructure;
 
 public class TblStudents extends Table{
 	
-	public TblStudents() {
+	/*public TblStudents() {
 		super("Students",new String[]{"id"},"Student");
-	}
+	}*/
 
 	@Override
 	public String[] getColumnsIdentifiers() {
@@ -26,5 +29,14 @@ public class TblStudents extends Table{
 	public int getColumnsCount() {
 		return 5;
 	}
+
+	@Override
+	public Student createTableStructure() {
+		return new Student();
+	}
 	
+	@Override
+	public Student createTableStructure(Object[] data) {
+		return new Student(data);
+	}
 }

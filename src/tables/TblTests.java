@@ -2,17 +2,19 @@ package tables;
 
 import java.util.Date;
 
+import tablesStructures.Student;
+import tablesStructures.TableStructure;
 import tablesStructures.Test;
 
 public class TblTests extends Table{
 
-	public TblTests() {
+	/*public TblTests() {
 		super("Tests",new String[]{"testid"},"Test");
-	}
+	}*/
 
 	@Override
 	public String[] getColumnsIdentifiers() {
-		return new String[]{"testid","name","category","testDate"};
+		return new String[]{"name","category","testDate"};
 	}
 
 	@Override
@@ -29,5 +31,14 @@ public class TblTests extends Table{
 	public int getColumnsCount() {
 		return 4;
 	}
+
+	@Override
+	public Test createTableStructure() {
+		return new Test();
+	}
 	
+	@Override
+	public Test createTableStructure(Object[] data) {
+		return new Test(data);
+	}
 }

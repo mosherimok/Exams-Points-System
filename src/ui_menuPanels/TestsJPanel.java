@@ -24,7 +24,8 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import actions.AddGradesActions;
-import actions.TestsActions;
+import actions.ButtonsActions;
+import actions.MV_Factory.Views;
 import tables.TableGetter;
 import tables.TblTests;
 
@@ -83,11 +84,11 @@ public class TestsJPanel extends AbstractJPanel {
 		btnModify = new JButton("\u05E2\u05E8\u05D9\u05DB\u05EA \u05DE\u05D1\u05D7\u05DF \u05D6\u05D4");
 		btnModify.setEnabled(false);
 		btnModify.setAlignmentX(Component.CENTER_ALIGNMENT);
-		btnModify.addActionListener(actionListener);
+		btnModify.addActionListener(mapActionListener);
 		panelEdition.add(btnModify);
 		
 		btnAdd = new JButton("\u05D4\u05D5\u05E1\u05E4\u05EA \u05DE\u05D1\u05D7\u05DF \u05D7\u05D3\u05E9");
-		btnAdd.addActionListener(actionListener);
+		btnAdd.addActionListener(mapActionListener);
 		btnAdd.setAlignmentX(Component.CENTER_ALIGNMENT);
 		panelEdition.add(btnAdd);
 		
@@ -102,7 +103,7 @@ public class TestsJPanel extends AbstractJPanel {
 		panelCenter.setLayout(new BorderLayout(0, 0));
 		panelTable.setLayout(new BorderLayout(0, 0));
 		
-		JScrollPane scrollPane = new JScrollPane(table);
+		JScrollPane scrollPane = new JScrollPane(jtable);
 		scrollPane.setBorder(null);
 		
 		panelTable.add(scrollPane);
@@ -120,7 +121,7 @@ public class TestsJPanel extends AbstractJPanel {
 		panelTestActions.add(verticalStrut);
 		
 		btnAddGrades = new JButton("\u05D4\u05D5\u05E1\u05E4\u05EA \u05E6\u05D9\u05D5\u05E0\u05D9\u05DD \u05DC\u05DE\u05D1\u05D7\u05DF \u05D6\u05D4");
-		btnAddGrades.addActionListener(actionListener);
+		btnAddGrades.addActionListener(mapActionListener);
 		btnAddGrades.setEnabled(false);
 		btnAddGrades.setAlignmentX(Component.CENTER_ALIGNMENT);
 		panelTestActions.add(btnAddGrades);
@@ -132,7 +133,7 @@ public class TestsJPanel extends AbstractJPanel {
 		buttonViewTested.setAlignmentX(Component.CENTER_ALIGNMENT);
 		panelTestActions.add(buttonViewTested);
 
-		JPanel panelSearch = new SearchRecord(table);
+		JPanel panelSearch = new SearchRecord(jtable);
 		panelUpper.add(panelSearch);
 	}
 	
@@ -146,21 +147,19 @@ public class TestsJPanel extends AbstractJPanel {
 	
 	@Override
 	protected void initActionListeners() {
-		TestsActions action = new TestsActions(table);
-		actionListener.addAction(ADD, action.getAddAction());
-		actionListener.addAction(MODIFY,action.getModifyAction());
-//		actionListener.addAction(Delete,  action.getDeleteAction(table));
-		actionListener.addAction(ADD_GRADES, AddGradesActions.getAddGradesAction(table));
+		ButtonsActions buttonsActions = new ButtonsActions(jtable,Views.Tests);
+		mapActionListener.addAction(ADD,buttonsActions.getAddAction());
+		mapActionListener.addAction(MODIFY,buttonsActions.getModifyAction());
 	}
 	
 	@Override
 	protected void initTable() {
 		super.initTable();
-		table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+		jtable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
 			
 			@Override
 			public void valueChanged(ListSelectionEvent arg0) {
-				if(table.getSelectedRow()!=-1){
+				if(jtable.getSelectedRow()!=-1){
 					btnAddGrades.setEnabled(true);
 				}
 			}

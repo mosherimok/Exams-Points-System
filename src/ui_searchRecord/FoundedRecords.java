@@ -11,10 +11,16 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
+import database.Condition;
 import database.DatabaseActions;
+import database.DatabaseUpdatingScripts;
+import mvc_dialogs.Controller;
 import tables.Table;
+import tablesStructures.TableStructure;
+import ui_components.AbstractJPanel;
 
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.SoftBevelBorder;
@@ -22,16 +28,20 @@ import javax.swing.border.BevelBorder;
 import javax.swing.border.MatteBorder;
 import java.awt.Color;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.sql.SQLException;
 import java.awt.event.ActionEvent;
 
 public class FoundedRecords extends JDialog {
-
+	
 	//All stuff:
-	private final Table TABLE;
+	private final Table table;
+	private boolean isNeedToRefreshData;
 	
 	//All Components:
 	private final JPanel contentPanel = new JPanel();
-	private JTable table;
+	private JTable jtable;
 
 	/**
 	 * Launch the application.
@@ -46,7 +56,7 @@ public class FoundedRecords extends JDialog {
 		}
 	}*/
 	public FoundedRecords(Table table,Object[][] data) {
-		TABLE = table;
+		this.table = table;
 		initGUI();
 		initTable(data);
 		initDialog();
@@ -57,6 +67,15 @@ public class FoundedRecords extends JDialog {
 		setModal(true);
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		setVisible(true);
+		addWindowListener(new WindowAdapter() {
+			
+			@Override
+			public void windowClosing(WindowEvent e) {
+				((AbstractJPanel)getRootPane().getParent()).refreshDataFromDB();
+				super.windowClosing(e);
+			}
+			
+		});
 	}
 
 
@@ -83,8 +102,8 @@ public class FoundedRecords extends JDialog {
 			contentPanel.add(panel, BorderLayout.CENTER);
 			panel.setLayout(new BorderLayout(0, 0));
 			{
-				table = new JTable();
-				panel.add(table);
+				jtable = new JTable();
+				panel.add(jtable);
 			}
 		}
 		{
@@ -104,6 +123,20 @@ public class FoundedRecords extends JDialog {
 									table.getValueAt(table.getSelectedRow(),index));
 						}
 						Database.delete(TABLE.getTableName(), "");*/
+						if(JOptionPane.showConfirmDialog(null, "האם אתה בטוח שברצונך למחוק רשומה זו?","התרעה לפני מחיקה",JOptionPane.OK_CANCEL_OPTION)==JOptionPane.CANCEL_OPTION)
+							return;
+						
+						TableStructure structure = ((CustomTableModel)jtable.getModel()).
+								getRowStructure(jtable.getSelectedRow());
+						Condition condition = new Condition(structure.getPrimaryKey());
+						String script = DatabaseUpdatingScripts.deleteFrom(table.getTableName(),
+								condition);
+						try {
+							DatabaseActions.executeUpdate(script);
+							isNeedToRefreshData = true;
+						} catch (SQLException e1) {
+							e1.printStackTrace();
+						}
 					}
 				});
 				panelButtons.add(button);
@@ -112,7 +145,11 @@ public class FoundedRecords extends JDialog {
 				JButton button = new JButton("\u05E2\u05E8\u05D5\u05DA \u05E4\u05E8\u05D8\u05D9\u05DD");
 				button.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-						
+						TableStructure old = ((CustomTableModel)jtable.getModel()).
+								getRowStructure(jtable.getSelectedRow());
+						Controller controller = 
+								ControllerFactory.getControllerModifyRecord(table.getTableName(),old);
+						isNeedToRefreshData = controller.isNeedToRefreshData();
 					}
 				});
 				panelButtons.add(button);
@@ -138,15 +175,34 @@ public class FoundedRecords extends JDialog {
 	}
 	
 	public void initTable(Object[][] data){
-		table.setModel(new CustomTableModel(data,TABLE.getColumnsLabels()));
-		table.setSelectionMode(DefaultListSelectionModel.SINGLE_SELECTION);
+		jtable.setModel(new CustomTableModel(data,table.getColumnsLabels()));
+		jtable.setSelectionMode(DefaultListSelectionModel.SINGLE_SELECTION);
 	}
 	
 	private class CustomTableModel extends DefaultTableModel{
 		
-		public CustomTableModel(Object[][] data,Object[] identifiers){
-			super(data,identifiers);
+		public CustomTableModel(Object[][] data,String[] labels){
+			super();
+			initData(data);
+			initColumnsIdentifiers(labels);
 		}
+		
+		private void initData(Object[][] data){
+			for(Object[] row:data){
+				dataVector.addElement(table.createTableStructure(row));
+			}
+		}
+		
+		private void initColumnsIdentifiers(String[] labels){
+			for(String label: labels){
+				columnIdentifiers.addElement(label);
+			}
+		}
+		
+		public TableStructure getRowStructure(int row){
+			return (TableStructure)dataVector.get(row);
+		}
+		
 		
 		public int getColumnIndex(String name){
 			return columnIdentifiers.indexOf(name);

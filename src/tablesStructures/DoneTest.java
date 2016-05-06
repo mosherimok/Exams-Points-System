@@ -12,6 +12,11 @@ public class DoneTest extends TableStructure{
 	private Integer testid;
 	private Integer grade;
 	
+	public DoneTest(){}
+	
+	public DoneTest(Object[] values){
+		initFromArray(values);
+	}
 	
 	public int getStudentid() {
 		return studentid;
@@ -58,9 +63,9 @@ public class DoneTest extends TableStructure{
 				e.printStackTrace();
 				return;
 			}
-		studentid = (int)values[0];
-		testid = (int) values[1];
-		grade= (int)values[2];
+		setStudentid((int)values[0]);
+		setTestid((int) values[1]);
+		setGrade((int)values[2]);
 	}
 	
 	@Override
@@ -75,17 +80,19 @@ public class DoneTest extends TableStructure{
 		return "DoneTests";
 	}
 
-
 	@Override
-	public String[] getPrimaryKeyName() {
-		return new String[]{"studentID","testID"};
+	public PrimaryKey getPrimaryKey() {
+		PrimaryKey prim = new PrimaryKey();
+		try {
+			prim.addKey("studentID", studentid);
+			prim.addKey("testID", testid);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return prim;
 	}
-
-
-	@Override
-	public Object[] getPrimaryKeyValue() {
-		return new Object[]{studentid,testid};
-	}
+	
+	
 
 	
 }

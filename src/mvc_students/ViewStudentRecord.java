@@ -237,7 +237,7 @@ public class ViewStudentRecord extends View{
 		student.setId(Integer.parseInt(id.getText().replace("-","")));
 		student.setFirstName(textField_f_name.getText());
 		student.setLastName(textField_l_name.getText());
-		student.setReceptionYear(((Integer)rec_year.getValue()).shortValue());
+		student.setReceptionYear((short)rec_year.getValue());
 		student.setPoints((int)points.getValue());
 		return student;
 	}

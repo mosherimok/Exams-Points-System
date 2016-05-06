@@ -18,7 +18,8 @@ import ui_searchRecord.SearchRecord;
 import javax.swing.JTable;
 
 import actionListeners.MapActionListener;
-import actions.StudentsActions;
+import actions.ButtonsActions;
+import actions.MV_Factory.Views;
 import tables.TableGetter;
 import tables.TblStudents;
 
@@ -45,15 +46,15 @@ public class StudentsDetailsPnl extends AbstractJPanel{
 
 	@Override
 	protected void initActionListeners() {
-		StudentsActions actions = new StudentsActions(table);
-		actionListener.addAction(ADD, actions.getAddAction());
-		actionListener.addAction(MODIFY,actions.getModifyAction());
+		ButtonsActions buttonsActions = new ButtonsActions(jtable,Views.Students);
+		mapActionListener.addAction(ADD,buttonsActions.getAddAction());
+		mapActionListener.addAction(MODIFY,buttonsActions.getModifyAction());
 //		actionListener.addAction(Delete,  actions.getDeleteAction(table));
 	}
 
 	@Override
 	protected void initGUI() {
-		actionListener = new MapActionListener();
+		mapActionListener = new MapActionListener();
 		
 		setLayout(new BorderLayout(0, 0));
 		
@@ -85,7 +86,7 @@ public class StudentsDetailsPnl extends AbstractJPanel{
 			btnModify = 
 					new JButton("\u05E2\u05E8\u05D9\u05DB\u05EA \u05E4\u05E8\u05D8\u05D9 \u05EA\u05DC\u05DE\u05D9\u05D3");
 	
-			btnModify.addActionListener(actionListener);
+			btnModify.addActionListener(mapActionListener);
 			
 			btnModify.setEnabled(false);
 			pnlActions.add(btnModify);
@@ -96,7 +97,7 @@ public class StudentsDetailsPnl extends AbstractJPanel{
 		{
 			btnAdd = new JButton("\u05D4\u05D5\u05E1\u05E4\u05EA \u05EA\u05DC\u05DE\u05D9\u05D3");
 	
-			btnAdd.addActionListener(actionListener);
+			btnAdd.addActionListener(mapActionListener);
 
 			pnlActions.add(btnAdd);
 		}
@@ -106,12 +107,12 @@ public class StudentsDetailsPnl extends AbstractJPanel{
 		
 		pnlTable.setLayout(new BorderLayout(0, 0));
 		
-		pnlTable.add(new JScrollPane(table));
+		pnlTable.add(new JScrollPane(jtable));
 	
 		
 		// JPanel SearchRecord
 		String[] complexCombinations = {"f_name + l_name"};
-		JPanel panel = new SearchRecord(table,complexCombinations);
+		JPanel panel = new SearchRecord(jtable,complexCombinations);
 		pnlAbove.add(panel);
 		
 	}

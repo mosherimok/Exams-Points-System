@@ -10,7 +10,7 @@ public class TestDatabaseUpdatingScripts {
 
 	private final String EXPECTED_INSERT = "INSERT INTO Students VALUES('213931777','Yehoda','Polak','2015','25')";
 	private final String EXPECTED_UPDATE = "UPDATE Students SET id='213931777',f_name='Gershon',l_name='Polak',reception_year='2015',points='25' WHERE id='213931777'";
-	private final String EXPECTED_UPDATE_BY_COLUMNS = "UPDATE Students SET points='25' WHERE id='213931777'";
+	private final String EXPECTED_UPDATE_BY_COLUMNS = "UPDATE Students SET id='213931777',points='25' WHERE id='213931777'";
 	private final String EXPECTED_DELETE = "DELETE FROM Students WHERE f_name='Gershon'";
 	
 	private static Student student;
@@ -35,8 +35,8 @@ public class TestDatabaseUpdatingScripts {
 	@Test
 	public void testUpdateTable(){
 		student.setFirstName("Gershon");
-		Condition condition = new Condition();
-		condition.addCondition(student.getPrimaryKeyName()[0], student.getPrimaryKeyValue()[0]);
+		Condition condition = new Condition(student.getPrimaryKey());
+//		condition.addCondition(student.getPrimaryKeyName()[0], student.getPrimaryKeyValue()[0]);
 		String script = DatabaseUpdatingScripts.updateTable(student, condition);
 		Assert.assertEquals("Script is not valid",EXPECTED_UPDATE,script);
 	}
@@ -45,8 +45,9 @@ public class TestDatabaseUpdatingScripts {
 	public void testUpdateTableByColums(){
 		Student student = new Student();
 		student.setPoints(25);
-		Condition condition = new Condition();
-		condition.addCondition(student.getPrimaryKeyName()[0],"213931777");
+		student.setId(213931777);
+		Condition condition = new Condition(student.getPrimaryKey());
+//		condition.addCondition(student.getPrimaryKeyName()[0],"213931777");
 		String script = DatabaseUpdatingScripts.updateTable(student, condition);
 		Assert.assertEquals("Script is not valid",EXPECTED_UPDATE_BY_COLUMNS,script);
 	}

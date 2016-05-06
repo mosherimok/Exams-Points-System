@@ -6,13 +6,11 @@ import java.util.NoSuchElementException;
 import exceptions.InvalidStructure;
 import tables.Table;
 
-public abstract class TableStructure implements Iterable<String>{
+public abstract class TableStructure implements Iterable<Object>{
 	
 	public abstract String getTableName();
 	
-	public abstract String[] getPrimaryKeyName();
-	
-	public abstract Object[] getPrimaryKeyValue();
+	public abstract PrimaryKey getPrimaryKey();
 	
 	public abstract Object[] getValues();
 	
@@ -34,15 +32,15 @@ public abstract class TableStructure implements Iterable<String>{
 	}
 	
 	@Override
-	public Iterator<String> iterator() {
-		return new Iterator<String>() {
+	public Iterator<Object> iterator() {
+		return new Iterator<Object>() {
 			Object[] values = getValues();
 			int index= 0;
 			@Override
-			public String next() {
+			public Object next() {
 				if(index==values.length)
 					throw new NoSuchElementException("No more elements!");
-				return String.valueOf(getValues()[index++]);
+				return values[index++];
 			}
 			
 			@Override

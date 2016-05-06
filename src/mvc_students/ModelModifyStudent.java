@@ -18,8 +18,8 @@ public class ModelModifyStudent extends Model implements ModifyRecord{
 	public ModelModifyStudent(Student oldStudent) {
 		super(TableGetter.getTable(TblStudents.class));
 		setStructure(oldStudent);
-		condition.addCondition(oldStudent.getPrimaryKeyName()[0], oldStudent.getPrimaryKeyValue()[0]);
-		
+//		condition.addCondition(oldStudent.getPrimaryKeyName()[0], oldStudent.getPrimaryKeyValue()[0]);
+		condition.addCondition(oldStudent.getPrimaryKey());
 	}
 
 	@Override

@@ -18,11 +18,12 @@ public class ModelModifyTest extends Model implements ModifyRecord{
 	public ModelModifyTest(Test oldTest) {
 		super(TableGetter.getTable(TblTests.class));
 		setStructure(oldTest);
-		String[] primnames = oldTest.getPrimaryKeyName();
-		Object[] primvals = oldTest.getPrimaryKeyValue();
-		condition.addCondition(primnames[0], primvals[0]);
-		condition.addCondition(primnames[1], primvals[1]);
-		condition.addCondition(primnames[2], primvals[2]);
+		condition.addCondition(oldTest.getPrimaryKey());
+//		String[] primnames = oldTest.getPrimaryKeyName();
+//		Object[] primvals = oldTest.getPrimaryKeyValue();
+//		condition.addCondition(primnames[0], primvals[0]);
+//		condition.addCondition(primnames[1], primvals[1]);
+//		condition.addCondition(primnames[2], primvals[2]);
 	}
 
 	@Override

@@ -17,6 +17,12 @@ public class Student extends TableStructure{
 	private Short receptionYear;
 	private Integer points;
 	
+	public Student(){}
+	
+	public Student(Object[] values){
+		initFromArray(values);
+	}
+	
 	public int getId() {
 		return id;
 	}
@@ -68,11 +74,11 @@ public class Student extends TableStructure{
 				e.printStackTrace();
 				return;
 			}
-		id = (int)values[0];
-		firstName = values[1].toString();
-		lastName=values[2].toString();
-		receptionYear = (short)values[3];
-		points = (int)values[4];
+		setId((int)values[0]);
+		setFirstName(values[1].toString());
+		setLastName(values[2].toString());
+		setReceptionYear((short)values[3]);
+		setPoints((int)values[4]);
 	}
 	
 	@Override
@@ -85,13 +91,10 @@ public class Student extends TableStructure{
 		return "Students";
 	}
 	
+
 	@Override
-	public String[] getPrimaryKeyName() {
-		return new String[]{"id"};
-	}
-	@Override
-	public Object[] getPrimaryKeyValue() {
-		return new Object[]{id};
+	public PrimaryKey getPrimaryKey() {
+		return new PrimaryKey("id",id);
 	}
 	
 

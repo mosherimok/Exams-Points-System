@@ -1,12 +1,14 @@
 package tables;
 
+import tablesStructures.TableStructure;
+import tablesStructures.Test;
 import tablesStructures.TestCategory;
 
 public class TblTestsCategories extends Table{
 
-	public TblTestsCategories() {
+	/*public TblTestsCategories() {
 		super("TestsCategories", new String[]{"CategoryName"},"TestCategory");
-	}
+	}*/
 
 	@Override
 	public String[] getColumnsIdentifiers() {
@@ -26,6 +28,16 @@ public class TblTestsCategories extends Table{
 	@Override
 	public int getColumnsCount() {
 		return 4;
+	}
+
+	@Override
+	public TestCategory createTableStructure() {
+		return new TestCategory();
+	}
+	
+	@Override
+	public TestCategory createTableStructure(Object[] data) {
+		return new TestCategory(data);
 	}
 
 }
