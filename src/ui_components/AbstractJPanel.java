@@ -1,8 +1,11 @@
 package ui_components;
 
+import java.awt.ComponentOrientation;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
+import java.util.Enumeration;
 
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
@@ -10,8 +13,11 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
+import javax.swing.SwingConstants;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableColumn;
 
 import actionListeners.Action;
 import actionListeners.MapActionListener;
@@ -32,7 +38,7 @@ public abstract class AbstractJPanel extends JPanel {
 		protected JTable jtable;
 		protected JButton btnAdd;
 		protected JButton btnModify;
-		protected JButton btnDelete;
+		protected JButton btnDelete = new JButton();
 		
 	//Buttons Action Listeners map:
 		protected MapActionListener mapActionListener;
@@ -84,9 +90,7 @@ public abstract class AbstractJPanel extends JPanel {
 		}
 		
 		protected void initTable(){
-			ResultSetDefaultTableModel rsdtm = 
-					new ResultSetDefaultTableModel(table);
-			jtable = new JTable(rsdtm);
+			jtable = new JTableMenuPanels(table);
 			jtable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 			jtable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
 				
@@ -98,12 +102,16 @@ public abstract class AbstractJPanel extends JPanel {
 					}
 				}
 			});
+			
+		
+			
 		}
 		
 		
 		public void refreshDataFromDB(){
 			((ResultSetDefaultTableModel)jtable.getModel()).refreshData();
 			jtable.getParent().getParent().repaint();
+			repaint();
 			System.out.println("JTable data refreshed!");
 		}
 	

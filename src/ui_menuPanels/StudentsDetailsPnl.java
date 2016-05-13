@@ -14,6 +14,7 @@ import java.awt.GridLayout;
 
 import ui_components.AbstractJPanel;
 import ui_searchRecord.SearchRecord;
+import ui_searchRecord.SearchRecordSQLBased;
 
 import javax.swing.JTable;
 
@@ -112,7 +113,7 @@ public class StudentsDetailsPnl extends AbstractJPanel{
 		
 		// JPanel SearchRecord
 		String[] complexCombinations = {"f_name + l_name"};
-		JPanel panel = new SearchRecord(jtable,complexCombinations);
+		JPanel panel = new SearchRecordSQLBased(table);
 		pnlAbove.add(panel);
 		
 	}

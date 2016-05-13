@@ -1,10 +1,9 @@
 package ui_done_tests;
 
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 
 import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -13,10 +12,8 @@ import org.junit.Test;
 import database.Condition;
 import database.DatabaseActions;
 import database.DatabaseUpdatingScripts;
-import database.ResultSetHandle;
-import database.StatementHandle;
 import tablesStructures.Student;
-import ui_done_tests.Points;
+import ui_donetests.Points;
 
 public class PointsTest {
 
@@ -34,11 +31,31 @@ public class PointsTest {
 		
 		condition = new Condition();
 		condition.addCondition("id", STUDENT_ID);
+		
+		DatabaseActions.setCloseConnectionWhenDone(false);
 	}
 	
 	@Before
 	public void resetPoints(){
-		StatementHandle handle = new StatementHandle() {
+		try {
+			String pointsScript = "SELECT points FROM Students WHERE ID = " + 
+					STUDENT_ID;
+			previousPoints = (int) DatabaseActions.
+					getAllQueryData(pointsScript)[0][0];
+			
+			student.setPoints(0);
+			String scriptUpdate = DatabaseUpdatingScripts.updateTable(student, condition);
+			DatabaseActions.executeUpdate(scriptUpdate);
+		
+			int currentPoints = (int) DatabaseActions.
+					getAllQueryData(pointsScript)[0][0];
+			
+			Assert.assertTrue("Points did not reset",currentPoints==0);
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		/*StatementHandle handle = new StatementHandle() {
 			
 			@Override
 			public void handle(Statement statement) throws SQLException {
@@ -56,7 +73,7 @@ public class PointsTest {
 				result.next();
 				Assert.assertTrue("Points did not reset",result.getInt(1)==0);
 			}
-		};
+		};*/
 			
 
 	}
@@ -64,10 +81,20 @@ public class PointsTest {
 	
 	@Test
 	public void pointsShouldBeUpdate(){
-		Points.updatePoints(TEST_ID, STUDENT_ID, GRADE);
+		try {
+			Points.updatePoints(TEST_ID, STUDENT_ID, GRADE);
+			
+			String scriptValidate = "SELECT points FROM Students WHERE ID = " + STUDENT_ID;
+			Object[][] points = DatabaseActions.getAllQueryData(scriptValidate);
+			Assert.assertEquals("Points did not updated",
+					EXPECTED_POINTS,(int)points[0][0]);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
-		String scriptValidate = "SELECT points FROM Students WHERE ID = " + STUDENT_ID;
-		StatementHandle handle = new StatementHandle() {
+		
+		/*StatementHandle handle = new StatementHandle() {
 			
 			@Override
 			public void handle(Statement stmt) throws SQLException {
@@ -79,6 +106,7 @@ public class PointsTest {
 		};
 		
 		DatabaseActions.executeQuery(handle);
+		*/
 	}
 	
 	@After
@@ -93,6 +121,12 @@ public class PointsTest {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	@AfterClass
+	public static void setCloseConnectionWhenDone(){
+		DatabaseActions.setCloseConnectionWhenDone(true);
+		DatabaseActions.closeStuff();
 	}
 	
 }

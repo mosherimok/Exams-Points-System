@@ -4,7 +4,9 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import ui_components.AbstractJPanel;
+import ui_donetests_components.DisplayAllExamineesJDialog;
 import ui_searchRecord.SearchRecord;
+import ui_searchRecord.SearchRecordSQLBased;
 
 import java.awt.BorderLayout;
 import javax.swing.JLabel;
@@ -130,10 +132,17 @@ public class TestsJPanel extends AbstractJPanel {
 		panelTestActions.add(verticalStrut_1);
 		
 		JButton buttonViewTested = new JButton("<html>\r\n\u05D4\u05E6\u05D2\u05EA \u05DB\u05DC \u05D4\u05E0\u05D1\u05D7\u05E0\u05D9\u05DD<br>\r\n\u05E2\u05D1\u05D5\u05E8 \u05DE\u05D1\u05D7\u05DF \u05D6\u05D4\r\n</html>");
+		buttonViewTested.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int testid = (int) jtable.getValueAt(jtable.getSelectedRow(), 0);
+				new DisplayAllExamineesJDialog(testid);
+			}
+		});
+
 		buttonViewTested.setAlignmentX(Component.CENTER_ALIGNMENT);
 		panelTestActions.add(buttonViewTested);
 
-		JPanel panelSearch = new SearchRecord(jtable);
+		JPanel panelSearch = new SearchRecordSQLBased(table);
 		panelUpper.add(panelSearch);
 	}
 	
@@ -150,6 +159,7 @@ public class TestsJPanel extends AbstractJPanel {
 		ButtonsActions buttonsActions = new ButtonsActions(jtable,Views.Tests);
 		mapActionListener.addAction(ADD,buttonsActions.getAddAction());
 		mapActionListener.addAction(MODIFY,buttonsActions.getModifyAction());
+		mapActionListener.addAction(ADD_GRADES, AddGradesActions.getAddGradesAction(jtable));
 	}
 	
 	@Override

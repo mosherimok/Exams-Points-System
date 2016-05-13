@@ -93,7 +93,7 @@ public class ViewTestRecord extends View {
 				panelFields.add(panelFieldName);
 				{
 					try {
-						textField_testName = new JFormattedTextField(new RegexFormatter("^^[a-zA-Zà-ú']+$"));
+						textField_testName = new JFormattedTextField(new RegexFormatter("^[a-zA-Zà-ú']+$"));
 					} catch (ParseException e) {
 						e.printStackTrace();
 					}

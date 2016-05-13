@@ -3,7 +3,7 @@ package actions;
 import javax.swing.JTable;
 
 import actionListeners.Action;
-import ui_done_tests.AddGradesToTestJDialog;
+import ui_donetests.AddGradesToTestJDialog;
 
 public class AddGradesActions {
 

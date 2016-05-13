@@ -1,8 +1,10 @@
 package ui_components;
 
+import java.sql.SQLException;
+
 import javax.swing.table.DefaultTableModel;
 
-import database.DatabaseDataFetching;
+import database.DatabaseActions;
 import tables.Table;
 import tablesStructures.TableStructure;
 
@@ -16,6 +18,8 @@ public class ResultSetDefaultTableModel extends DefaultTableModel{
 		refreshData();
 		initColumnsLabels();
 	}
+	
+
 	
 	/*public String getColumnName(int col){
 		try {
@@ -66,7 +70,11 @@ public class ResultSetDefaultTableModel extends DefaultTableModel{
 	}
 	
 	public void refreshData(){
-		dataVector = DatabaseDataFetching.getAllTableData(sqlTable);
+		try {
+			dataVector = DatabaseActions.getAllTableData(sqlTable);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public TableStructure getRowStructure(int row){

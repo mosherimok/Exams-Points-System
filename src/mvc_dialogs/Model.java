@@ -2,6 +2,7 @@ package mvc_dialogs;
 
 import java.sql.SQLException;
 
+import database.DatabaseActions;
 import tables.Table;
 import tablesStructures.TableStructure;
 

@@ -22,11 +22,12 @@ import javax.swing.JTextField;
 
 import database.DatabaseActions;
 import database.ResultSetManipulation;
-import database.StatementHandle;
 import tables.Table;
 
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.ActionEvent;
 import java.awt.GridLayout;
 import javax.swing.border.EtchedBorder;
@@ -36,9 +37,8 @@ import javax.swing.SwingConstants;
 
 public class SearchRecordSQLBased extends JPanel {
 	//All members:
-	private final Table TABLE;
+	private final Table table;
 	private String[] criterias;
-	private Object[][] fetchedData;
 	
 	//All components:
 	private JLabel label_searchFor;
@@ -56,8 +56,8 @@ public class SearchRecordSQLBased extends JPanel {
 	 * Create the panel.
 	 */
 	public SearchRecordSQLBased(Table table) {
-		TABLE = table;
-		criterias = TABLE.getColumnsLabels();
+		this.table = table;
+		criterias = table.getColumnsLabels();
 		initGUI();
 //		initialCriterias(); // must be after combobox initialization.
 	}
@@ -66,6 +66,16 @@ public class SearchRecordSQLBased extends JPanel {
 		setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 		
 		button_search = new JButton("\u05D7\u05E4\u05E9");
+		button_search.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					searchingHandle();
+				} catch (Exception e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+		});
 		add(button_search);
 		
 		rigidArea_2 = Box.createRigidArea(new Dimension(20, 20));
@@ -78,6 +88,18 @@ public class SearchRecordSQLBased extends JPanel {
 		textField.setToolTipText("\u05D4\u05E7\u05DC\u05D3 \u05DC\u05D7\u05D9\u05E4\u05D5\u05E9");
 		textField.setSize(new Dimension(80, 20));
 		textField.setColumns(30);
+		textField.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent arg0) {
+				if(arg0.getKeyCode()==KeyEvent.VK_ENTER)
+					try {
+						searchingHandle();
+						super.keyPressed(arg0);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+			}
+		});
 		
 		rigidArea_1 = Box.createRigidArea(new Dimension(20, 20));
 		add(rigidArea_1);
@@ -102,8 +124,8 @@ public class SearchRecordSQLBased extends JPanel {
 		int selectedIndexPrimary = comboBox_primaryCriteria.getSelectedIndex();
 		int selectedIndexSecondary = comboBox_secondaryCriteria.getSelectedIndex();
 		
-		String columnIdentifier1 = TABLE.getColumnsIdentifiers()[selectedIndexPrimary];
-		String columnIdentifier2 = selectedIndexSecondary==-1?null:TABLE.getColumnsIdentifiers()[selectedIndexSecondary];
+		String columnIdentifier1 = table.getAllColumnsIdentifiers()[selectedIndexPrimary];
+		String columnIdentifier2 = selectedIndexSecondary==-1?null:table.getAllColumnsIdentifiers()[selectedIndexSecondary];
 		
 		String script = null;
 		if(columnIdentifier2!=null){
@@ -111,54 +133,19 @@ public class SearchRecordSQLBased extends JPanel {
 			if(inputs.length<2)
 				throw new Exception("Input to search is not valid. Two items to search " +
 						"are required!");
-			script = String.format("SELECT * FROM %s WHERE %s='%s' AND %s='%s'",
-				TABLE.getTableName(),columnIdentifier1,inputs[0],columnIdentifier2,inputs[1]);
+			script = String.format(table.getSelectAllScript()+" WHERE %s='%s' AND %s='%s'",
+				columnIdentifier1,inputs[0].toLowerCase(),columnIdentifier2,inputs[1].toLowerCase());
 		}
 		else
-			script = String.format("SELECT * FROM %s WHERE %s='%s'",
-					TABLE.getTableName(),columnIdentifier1,textField.getText());
+			script = String.format(table.getSelectAllScript()+" WHERE %s='%s'",
+					columnIdentifier1,textField.getText());
 		
-		final String finalScript = script;
+		Object[][] fetchedData = DatabaseActions.getAllQueryData(script);
+
 		
-		DatabaseActions.executeQuery(new StatementHandle() {
-			
-			@Override
-			public void handle(Statement statement) throws SQLException {
-				statement.executeQuery(finalScript);
-				fetchedData = ResultSetManipulation.getResultSetDataArray(statement.getResultSet());
-			}
-		});
-		
-		new FoundedRecords(TABLE, fetchedData);
+		new FoundedRecords(table, fetchedData);
 		
 	}
-	
-		/*ResultSet set = null;
-		try {
-			set = TableDetails.getColumnsLabels(TABLE_NAME);
-			ResultSetMetaData result = set.getMetaData();
-			for(int index = 1;index<=result.getColumnCount();index++){
-				comboBox.addItem(result.getColumnLabel(index));
-				criterias.put(result.getColumnLabel(index),
-						Class.forName(result.getColumnClassName(index)));
-			}
-		} catch (SQLException | ClassNotFoundException e) {
-			e.printStackTrace();
-		}
-		finally{
-			if(set!=null){
-				try {
-					
-					 * Quote from offical docs:
-					 * Note:When a Statement object is closed, its current ResultSet object,
-					 * if one exists, is also closed.
-					 
-					set.getStatement().close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-			}
-		}*/
 	
 
 }

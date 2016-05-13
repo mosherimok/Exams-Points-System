@@ -77,7 +77,7 @@ public class Student extends TableStructure{
 		setId((int)values[0]);
 		setFirstName(values[1].toString());
 		setLastName(values[2].toString());
-		setReceptionYear((short)values[3]);
+		setReceptionYear(Short.parseShort(values[3].toString()));
 		setPoints((int)values[4]);
 	}
 	

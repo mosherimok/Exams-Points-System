@@ -4,61 +4,79 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Assert;
+import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import database.Condition;
 import database.DatabaseActions;
 import database.DatabaseConnection;
 import database.DatabaseUpdatingScripts;
-import database.StatementHandle;
 import tablesStructures.DoneTest;
-import ui_done_tests.Grades;
+import ui_donetests.Grades;
 
 public class GradesTest {
 
 	private final String TABLE_NAME = "DoneTests";
-	private final int TEST_ID = 2;
+	private final int TEST_ID = 1;
 	private final String STUDENT_FULL_NAME = "Moshe Rimok";
 	private final int STUDENT_ID = 318358587;
 	private final int GRADE = 95;
+	private DoneTest doneTest;
 	
+	@BeforeClass
+	public static void setCloseConnectionWhenDone(){
+		DatabaseActions.setCloseConnectionWhenDone(false);
+	}
 	
+	@Before
+	public void initDoneTest(){
+		doneTest = new DoneTest();
+		doneTest.setTestid(TEST_ID);
+		doneTest.setGrade(GRADE);
+		try {
+			doneTest.setStudentid(Grades.getStudentID(STUDENT_FULL_NAME));
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
 	
 	@Test
 	public void gradeShouldBeAdd(){
-		StatementHandle handle = new StatementHandle() {
+		try {			
+			Grades.addGradesToDoneTest(doneTest);
 			
-			@Override
-			public void handle(Statement statement) throws SQLException {
-				DoneTest test = new DoneTest();
-				test.setTestid(TEST_ID);
-				test.setGrade(GRADE);
-				test.setStudentid(Grades.getStudentID(STUDENT_FULL_NAME, statement));
-				
-				Grades.addGradesToTest(test,statement);
-				
-				statement.executeQuery(String.format("SELECT %s FROM %s WHERE %s = %d AND %s = %d",
-						"TestID",TABLE_NAME,"TestID",TEST_ID,"StudentID",STUDENT_ID));
-				
-				statement.getResultSet().next();
-				
-				Assert.assertTrue("Grade did not add to this test",statement.getResultSet().isLast());
-			}
-		};
-		
+			String currentGradeScript = String.format("SELECT %s FROM %s WHERE %s = %d AND %s = %d",
+					"grade",TABLE_NAME,"testid",TEST_ID,"StudentID",STUDENT_ID);
+			
+			Object[][] grade = DatabaseActions.getAllQueryData(currentGradeScript);
+			System.out.println(grade.length);
+			Assert.assertTrue("Grade did not add to this test",grade.length==1);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	@After
 	public void deleteGrade(){
 		Condition condition = new Condition();
-		condition.addCondition("TestID", TEST_ID);
-		condition.addCondition("StudentID", STUDENT_ID);
+		condition.addCondition(doneTest.getPrimaryKey());
 		try {
 			DatabaseActions.executeUpdate(DatabaseUpdatingScripts.deleteFrom(TABLE_NAME,condition));
+			Object[][] doneTest = DatabaseActions.getAllQueryData("SELECT * FROM DoneTests WHERE " + 
+								"studentID = " + STUDENT_ID);
+			Assert.assertTrue("Done test didn't deleted", doneTest.length==0);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	@AfterClass
+	public static void closeStuff(){
+		DatabaseActions.setCloseConnectionWhenDone(true);
+		DatabaseActions.closeStuff();
 	}
 	
 }

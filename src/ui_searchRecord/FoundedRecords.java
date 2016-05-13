@@ -2,46 +2,54 @@ package ui_searchRecord;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
-import java.awt.JobAttributes.DefaultSelectionType;
 
 import javax.swing.DefaultListSelectionModel;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
+import actions.MV_Factory;
+import actions.MV_Factory.Views;
 import database.Condition;
 import database.DatabaseActions;
 import database.DatabaseUpdatingScripts;
+import exceptions.InvalidStructure;
 import mvc_dialogs.Controller;
+import mvc_dialogs.Model;
+import mvc_dialogs.View;
 import tables.Table;
 import tablesStructures.TableStructure;
-import ui_components.AbstractJPanel;
+import ui_main.MainScreen;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.border.EtchedBorder;
-import javax.swing.border.SoftBevelBorder;
-import javax.swing.border.BevelBorder;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.border.MatteBorder;
 import java.awt.Color;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.sql.SQLException;
+import java.util.Vector;
 import java.awt.event.ActionEvent;
 
 public class FoundedRecords extends JDialog {
 	
 	//All stuff:
 	private final Table table;
-	private boolean isNeedToRefreshData;
+	private MV_Factory mv_factory;
 	
 	//All Components:
 	private final JPanel contentPanel = new JPanel();
 	private JTable jtable;
+	private JButton buttonModify;
+	private JButton buttonDelete;
 
 	/**
 	 * Launch the application.
@@ -57,8 +65,9 @@ public class FoundedRecords extends JDialog {
 	}*/
 	public FoundedRecords(Table table,Object[][] data) {
 		this.table = table;
-		initGUI();
+		mv_factory = new MV_Factory(Views.valueOf(table.getTableName()));
 		initTable(data);
+		initGUI();
 		initDialog();
 	}
 	
@@ -71,7 +80,6 @@ public class FoundedRecords extends JDialog {
 			
 			@Override
 			public void windowClosing(WindowEvent e) {
-				((AbstractJPanel)getRootPane().getParent()).refreshDataFromDB();
 				super.windowClosing(e);
 			}
 			
@@ -102,8 +110,7 @@ public class FoundedRecords extends JDialog {
 			contentPanel.add(panel, BorderLayout.CENTER);
 			panel.setLayout(new BorderLayout(0, 0));
 			{
-				jtable = new JTable();
-				panel.add(jtable);
+				panel.add(new JScrollPane(jtable));
 			}
 		}
 		{
@@ -111,8 +118,8 @@ public class FoundedRecords extends JDialog {
 			panelButtons.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 			contentPanel.add(panelButtons, BorderLayout.SOUTH);
 			{
-				JButton button = new JButton("\u05DE\u05D7\u05E7 \u05E8\u05E9\u05D5\u05DE\u05D4");
-				button.addActionListener(new ActionListener() {
+				buttonDelete = new JButton("\u05DE\u05D7\u05E7 \u05E8\u05E9\u05D5\u05DE\u05D4");
+				buttonDelete.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						/*String[] pks = TABLE.getPrimaryKey();
 						Object[] vals = new Object[pks.length];
@@ -133,26 +140,39 @@ public class FoundedRecords extends JDialog {
 								condition);
 						try {
 							DatabaseActions.executeUpdate(script);
-							isNeedToRefreshData = true;
+							MainScreen.getCurrentViewPanel().refreshDataFromDB();
+							
+							buttonDelete.setEnabled(false);
+							buttonModify.setEnabled(false);
 						} catch (SQLException e1) {
 							e1.printStackTrace();
 						}
 					}
 				});
-				panelButtons.add(button);
+				buttonDelete.setEnabled(false);
+				panelButtons.add(buttonDelete);
 			}
 			{
-				JButton button = new JButton("\u05E2\u05E8\u05D5\u05DA \u05E4\u05E8\u05D8\u05D9\u05DD");
-				button.addActionListener(new ActionListener() {
+				buttonModify = new JButton("\u05E2\u05E8\u05D5\u05DA \u05E4\u05E8\u05D8\u05D9\u05DD");
+				buttonModify.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-						TableStructure old = ((CustomTableModel)jtable.getModel()).
+						TableStructure oldStructure = ((CustomTableModel)jtable.getModel()).
 								getRowStructure(jtable.getSelectedRow());
-						Controller controller = 
-								ControllerFactory.getControllerModifyRecord(table.getTableName(),old);
-						isNeedToRefreshData = controller.isNeedToRefreshData();
+						View view = mv_factory.getView();
+						Model model = null;
+						try {
+							model = mv_factory.getModifyModel(oldStructure);
+						} catch (InvalidStructure e1) {
+							e1.printStackTrace();
+						}
+						Controller controller = new Controller(view, model);
+						boolean isNeedToRefreshData = controller.isNeedToRefreshJTableData();
+						if(isNeedToRefreshData)
+							MainScreen.getCurrentViewPanel().refreshDataFromDB();
 					}
 				});
-				panelButtons.add(button);
+				buttonModify.setEnabled(false);
+				panelButtons.add(buttonModify);
 			}
 		}
 		{
@@ -175,16 +195,26 @@ public class FoundedRecords extends JDialog {
 	}
 	
 	public void initTable(Object[][] data){
-		jtable.setModel(new CustomTableModel(data,table.getColumnsLabels()));
+		jtable = new JTable(new CustomTableModel(data,table.getColumnsLabels()));
 		jtable.setSelectionMode(DefaultListSelectionModel.SINGLE_SELECTION);
+		jtable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+			
+			@Override
+			public void valueChanged(ListSelectionEvent e) {
+				if (jtable.getSelectedRow()!=-1){
+					buttonModify.setEnabled(true);
+					buttonDelete.setEnabled(true);
+				}
+			}
+		});
 	}
 	
 	private class CustomTableModel extends DefaultTableModel{
 		
 		public CustomTableModel(Object[][] data,String[] labels){
-			super();
-			initData(data);
+			dataVector = new Vector<TableStructure>();
 			initColumnsIdentifiers(labels);
+			initData(data);
 		}
 		
 		private void initData(Object[][] data){
@@ -193,8 +223,15 @@ public class FoundedRecords extends JDialog {
 			}
 		}
 		
+		@Override
+		public Object getValueAt(int row, int column) {
+			return ((TableStructure)dataVector.get(row)).getValues()[column];
+		};
+		
+		@SuppressWarnings("unchecked")
 		private void initColumnsIdentifiers(String[] labels){
 			for(String label: labels){
+				System.out.println(label);
 				columnIdentifiers.addElement(label);
 			}
 		}
@@ -203,10 +240,11 @@ public class FoundedRecords extends JDialog {
 			return (TableStructure)dataVector.get(row);
 		}
 		
-		
-		public int getColumnIndex(String name){
-			return columnIdentifiers.indexOf(name);
+		@Override
+		public boolean isCellEditable(int row, int column) {
+			return false;
 		}
+	
 	}
 
 }

@@ -43,4 +43,8 @@ public abstract class Table {
 	
 	public abstract TableStructure createTableStructure(Object[] data);
 	
+	public String[] getAllColumnsIdentifiers(){return getColumnsIdentifiers();}
+	
+	public String getSelectAllScript(){return "SELECT * FROM " + getTableName(); }
+	
 }

@@ -12,11 +12,11 @@ import tablesStructures.TableStructure;
 
 public class DatabaseDataFetching {
 
-	public static <Structure extends tablesStructures.TableStructure> 
+	/*public static <Structure extends tablesStructures.TableStructure> 
 					Vector<Structure> getAllTableData(Table table){
 		Vector<Structure> data = new Vector<>();
 			//TODO:improvement in retreiving table name.
-			String script = "SELECT * FROM " + table.getTableName();
+			String script = table.getSelectAllScript();
 			StatementHandle handle = new StatementHandle() {
 				
 				@Override
@@ -38,30 +38,34 @@ public class DatabaseDataFetching {
 			};
 			DatabaseActions.executeQuery(handle);
 		return data;
+	}*/
+	
+	/*public static <Structure extends tablesStructures.TableStructure> 
+	Vector<Structure> getAllTableData(Table table) throws SQLException{
+		
+		Vector<Structure> data = new Vector<>();
+		
+		Object[][] records = DatabaseActions.getAllQueryData(table.getSelectAllScript());
+		for (Object[] record : records){
+			Structure structure = (Structure) table.createTableStructure(record);
+			data.addElement(structure);
+		}
+		
+		return data;
 	}
 	
-	@SuppressWarnings("unchecked")
+	
+	
 	public static <T> T[] getDataOfColumnIdentifier(String tableName,String identifier,Class<T> resultClass) throws SQLException{
-		ArrayList<T> values = new ArrayList<>();
+//		ArrayList<T> columnData = new ArrayList<>();
 		String script = "SELECT " + identifier + " FROM " + tableName;
-		StatementHandle handle = new StatementHandle() {
-			@Override
-			public void handle(Statement stmt) throws SQLException {
-/*				result.getStatement().executeQuery("SELECT COUNT("+identifier+") " +"FROM " + tableName);
-				result.next();
-				int length = result.getInt(1);
-				
-				result.close();
-				*/
-//				values = (T[]) java.lang.reflect.Array.newInstance(resultClass, length);
-				ResultSet result = stmt.executeQuery(script);
-				while(result.next())
-					values.add((T) result.getObject(1));
-			}
-		};
-		
-		DatabaseActions.executeQuery(handle);
-		return values.toArray((T[])java.lang.reflect.Array.newInstance(resultClass, values.size()));
-	}
+		Object[][] values = DatabaseActions.getAllQueryData(script);
+		T[] columnData = (T[])java.lang.reflect.Array.newInstance(resultClass, values.length);
+		for(int row=0;row<values.length;row++){
+			columnData[row] = (T)values[row][0];
+		}
+		return columnData;
+//		return values.toArray((T[])java.lang.reflect.Array.newInstance(resultClass, values.size()));
+	}*/
 	
 }

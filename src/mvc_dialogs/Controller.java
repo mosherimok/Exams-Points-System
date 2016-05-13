@@ -12,10 +12,10 @@ public class Controller implements ActionListener{
 
 	private View view;
 	private Model model;
-	private boolean needToRefreshData = false;
+	private boolean needToRefreshJTableData = false;
 	
-	public boolean isNeedToRefreshData() {
-		return needToRefreshData;
+	public boolean isNeedToRefreshJTableData() {
+		return needToRefreshJTableData;
 	}
 
 	public Controller(View view,Model model){
@@ -43,7 +43,7 @@ public class Controller implements ActionListener{
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		needToRefreshData = false;
+		needToRefreshJTableData = false;
 //		try {
 //			view.validateFieldsProperiety();
 //		} catch (ImproperFieldsValues e2) {
@@ -57,7 +57,7 @@ public class Controller implements ActionListener{
 			return;
 		}
 		view.dispose();
-		needToRefreshData = true;
+		needToRefreshJTableData = true;
 	}
 	
 	

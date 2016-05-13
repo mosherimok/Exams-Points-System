@@ -38,11 +38,13 @@ public class ButtonsActions {
 			@Override
 			public void perform() {
 //				boolean result = addAction();
-				View view = MVfactory.getViewByType();
-				Model model = MVfactory.getAddModelByType();
+				View view = MVfactory.getView();
+				Model model = MVfactory.getAddModel();
 				Controller controller = new Controller(view, model);
-				if(controller.isNeedToRefreshData())
+				if(controller.isNeedToRefreshJTableData())
 					updateJTable();
+				else
+					System.out.println("NOT NEED TO REFRESH in table ");
 			}
 		};
 	}
@@ -57,12 +59,12 @@ public class ButtonsActions {
 				TableStructure oldStructure = ((ResultSetDefaultTableModel)jtable.getModel()).
 						getRowStructure(selectedRow);
 				
-				View view = MVfactory.getViewByType();
+				View view = MVfactory.getView();
 				Model model;
 				try {
-					model = MVfactory.getModifyModelByType(oldStructure);
+					model = MVfactory.getModifyModel(oldStructure);
 					Controller controller = new Controller(view, model);
-					if(controller.isNeedToRefreshData())
+					if(controller.isNeedToRefreshJTableData())
 						updateJTable();
 				} catch (InvalidStructure e) {
 					e.printStackTrace();

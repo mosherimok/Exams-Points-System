@@ -53,7 +53,7 @@ public class MainScreen implements ActionListener{
 	private final String TESTS_CATEGORIES = "TestsCategories";
 	
 	
-	private JPanel currentView;
+	private static JPanel currentView;
 
 	public MainScreen() {
 		frame = new JFrame();
@@ -228,6 +228,10 @@ public class MainScreen implements ActionListener{
 		currentView=view;
 		pnlCardLayout.add(currentView, name);
 		((CardLayout)pnlCardLayout.getLayout()).show(pnlCardLayout,name);
+	}
+	
+	public static AbstractJPanel getCurrentViewPanel(){
+		return (AbstractJPanel) currentView;
 	}
 	
 }

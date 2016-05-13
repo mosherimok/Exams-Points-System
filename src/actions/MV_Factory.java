@@ -2,7 +2,7 @@ package actions;
 
 import java.sql.SQLException;
 
-import database.DatabaseDataFetching;
+import database.DatabaseActions;
 import exceptions.InvalidStructure;
 import mvc_dialogs.Model;
 import mvc_dialogs.View;
@@ -32,14 +32,14 @@ public class MV_Factory {
 		this.viewType = view;
 	}
 	
-	public View getViewByType(){
+	public View getView(){
 		switch(viewType){
 		case Students:
 			return new ViewStudentRecord();
 		case Tests:
 			String[] categories = null;
 			try {
-				categories = DatabaseDataFetching.getDataOfColumnIdentifier(
+				categories = DatabaseActions.getDataOfColumnIdentifier(
 						"TestsCategories", "CategoryName",String.class);
 			} catch (SQLException e) {
 				e.printStackTrace();
@@ -52,7 +52,7 @@ public class MV_Factory {
 		}
 	}
 	
-	public Model getAddModelByType(){
+	public Model getAddModel(){
 		switch(viewType){
 			case Students:
 				return new ModelAddStudent();
@@ -65,7 +65,7 @@ public class MV_Factory {
 		}
 	}
 	
-	public Model getModifyModelByType(TableStructure oldStructure) throws InvalidStructure{
+	public Model getModifyModel(TableStructure oldStructure) throws InvalidStructure{
 		switch(viewType){
 		case Students:
 				if(!(oldStructure instanceof Student))
