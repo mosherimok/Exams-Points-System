@@ -1,16 +1,22 @@
 package ui_donetests_components;
 
 public class Examinee {
-	private String name;
+	private String f_name;
+	private String l_name;
 	private int id;
 	private int grade;
-	public Examinee(String name,int grade){
-		this.name = name;
+	public Examinee(String f_name,String l_name,int grade){
+		this.f_name = f_name;
+		this.l_name = l_name;
 		this.grade = grade;
 	}
 	
-	public String getName(){
-		return name;
+	public String getFirstName(){
+		return f_name;
+	}
+	
+	public String getLastName(){
+		return l_name;
 	}
 	
 	public int getGrade(){
@@ -32,11 +38,13 @@ public class Examinee {
 	
 	@Override
 	public String toString(){
-		return "<html>Name: " + name + " " + "<br> " + "Grade: " + grade + " " +  "</html>";
+		return "<html>Name: " + f_name + " " + l_name + "<br> " + "Grade: " + grade + " " +  "</html>";
 	}
 	
 	@Override
 	public boolean equals(Object other){
-		return ((Examinee)other).name.equals(name);
+		if(other instanceof Examinee)
+			return ((Examinee)other).f_name.equals(f_name)&&((Examinee)other).l_name.equals(l_name);
+		return false;
 	}
 }

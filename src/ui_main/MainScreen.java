@@ -22,7 +22,6 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.border.TitledBorder;
 
-import mv_TestCategoriesManagingDialog.ViewTestCategoryRecord;
 import view_menu_panels.ViewStudentsMenuPanel;
 import view_menu_panels.ViewTestsCategoriesPanel;
 import view_menu_panels.ViewTestsMenuPanel;

@@ -7,7 +7,6 @@ import database.DatabaseActions;
 import database.DatabaseUpdatingScripts;
 import mvc_dialogs.Model;
 import mvc_dialogs.ModifyRecord;
-import tables.TblStudents;
 import tablesStructures.Student;
 
 public class ModelModifyStudent extends Model implements ModifyRecord{

@@ -1,12 +1,8 @@
 package tablesStructures;
 
 import java.time.LocalDate;
-import java.util.Iterator;
-
-import exceptions.InvalidStructure;
 import tables.Table;
 import tables.TblStudents;
-import tables.TblTests;
 
 public class Student extends TableStructure{
 

@@ -32,8 +32,9 @@ import javax.swing.DefaultComboBoxModel;
 
 public class ViewTestRecord extends View {
 	
-	//finals:
+	//Finals:
 	private static final String RECORD_NAME = "îáçï";
+	private final String TEST_NAME_PATTERN = "^[0-9a-zA-Zà-ú'\" ]+$";
 	
 	//Objects:
 	private int testID;
@@ -97,7 +98,7 @@ public class ViewTestRecord extends View {
 				panelFields.add(panelFieldName);
 				{
 					try {
-						textField_testName = new JFormattedTextField(new RegexFormatter("^[a-zA-Zà-ú' ]+$"));
+						textField_testName = new JFormattedTextField(new RegexFormatter(TEST_NAME_PATTERN));
 						textField_testName.setHorizontalAlignment(SwingConstants.RIGHT);
 					} catch (ParseException e) {
 						e.printStackTrace();

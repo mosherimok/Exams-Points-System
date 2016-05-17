@@ -11,9 +11,6 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
-import javax.swing.table.TableModel;
-
-import tables.Table;
 
 public class CustomizedJTable extends JTable{
 
@@ -76,7 +73,7 @@ public class CustomizedJTable extends JTable{
      }
 	
 	public void updateJTableData(){
-		if(getModel() instanceof DefaultTableModel){
+		if(getModel() instanceof DefaultSqlTableModel){
 			((DefaultSqlTableModel)getModel()).refreshData();
 			((DefaultSqlTableModel)getModel()).fireTableDataChanged();
 			System.out.println("Refresh JTable data");

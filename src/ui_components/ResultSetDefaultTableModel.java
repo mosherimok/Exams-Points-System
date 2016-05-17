@@ -2,8 +2,6 @@ package ui_components;
 
 import java.sql.SQLException;
 
-import javax.swing.table.DefaultTableModel;
-
 import database.DatabaseActions;
 import exceptions.InvalidStructure;
 import tables.Table;
@@ -70,6 +68,7 @@ public class ResultSetDefaultTableModel extends DefaultSqlTableModel{
 		return ((TableStructure)dataVector.get(row)).getValues()[column];
 	}
 	
+	@Override
 	public void refreshData(){
 		try {
 			dataVector = DatabaseActions.getAllTableData(sqlTable);
@@ -78,12 +77,14 @@ public class ResultSetDefaultTableModel extends DefaultSqlTableModel{
 		}
 	}
 
+	@Override
 	public TableStructure getRowStructure(int row){
 		TableStructure struct = (TableStructure) dataVector.get(row);
 		return struct;
 		
 	}
 	
+	@Override
 	@SuppressWarnings("unchecked")
 	public void replaceRow(int row, TableStructure structure) throws Exception {
 		if(!structure.getTableName().equals(sqlTable.getTableName()))

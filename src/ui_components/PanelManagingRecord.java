@@ -1,8 +1,6 @@
 package ui_components;
 
 import javax.swing.JPanel;
-import javax.swing.JTable;
-
 import actions.ButtonsActions;
 import actions.MV_Factory.Views;
 

@@ -7,7 +7,6 @@ import database.DatabaseActions;
 import database.DatabaseUpdatingScripts;
 import mvc_dialogs.Model;
 import mvc_dialogs.ModifyRecord;
-import tables.TblTests;
 import tablesStructures.Test;
 
 public class ModelModifyTest extends Model implements ModifyRecord{

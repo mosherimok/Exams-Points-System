@@ -5,25 +5,17 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 
 import javax.swing.JButton;
-import javax.swing.JDialog;
 import javax.swing.JFormattedTextField;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-
 import java.awt.GridLayout;
-import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.JSpinner;
 
 import javax.swing.border.EtchedBorder;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-
 import exceptions.InvalidStructure;
 import mvc_dialogs.View;
-import tables.TblTestsCategories;
 import tablesStructures.TableStructure;
 import tablesStructures.TestCategory;
 import ui_components.LimitDocument;
@@ -35,16 +27,18 @@ import javax.swing.Box;
 import java.awt.Component;
 import java.awt.event.ActionListener;
 import java.text.ParseException;
-import java.util.Vector;
 import java.awt.event.ActionEvent;
 
 public class ViewTestCategoryRecord extends View {
 
-	private final JPanel contentPanel = new JPanel();
+	//Finals:
 	private static final String RECORD_NAME = "סוג מבחן";
-	//All components:
-	JFormattedTextField textFieldTestType;
-	JSpinner spinnerPoints1,spinnerPoints2,spinnerPoints3;
+	private final String TEST_TYPE_PATTERN = "^[0-9a-zA-Zא-ת'\" ]+$";
+	
+	//components:
+	private final JPanel contentPanel = new JPanel();
+	private JFormattedTextField textFieldTestType;
+	private JSpinner spinnerPoints1,spinnerPoints2,spinnerPoints3;
 	
 	public ViewTestCategoryRecord() {
 		super(RECORD_NAME);
@@ -75,7 +69,7 @@ public class ViewTestCategoryRecord extends View {
 				pnlFields.add(pnlFieldsCateg);
 				{
 					try {
-						textFieldTestType = new JFormattedTextField(new RegexFormatter("^[a-zA-Zא-ת' ]+$"));
+						textFieldTestType = new JFormattedTextField(new RegexFormatter(TEST_TYPE_PATTERN));
 						textFieldTestType.setDocument(new LimitDocument(20));
 						textFieldTestType.setHorizontalAlignment(SwingConstants.RIGHT);
 					} catch (ParseException e) {

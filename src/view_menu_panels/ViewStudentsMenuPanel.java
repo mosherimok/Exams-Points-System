@@ -1,10 +1,6 @@
 package view_menu_panels;
 
 import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.GridLayout;
-
-import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -24,8 +20,6 @@ import javax.swing.border.EtchedBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.JSpinner;
-import javax.swing.JTable;
-
 import java.awt.event.ActionListener;
 import java.util.Calendar;
 import java.awt.event.ActionEvent;
@@ -82,6 +76,7 @@ public class ViewStudentsMenuPanel extends JPanel{
 		
 		JButton button = new JButton("\u05D4\u05E6\u05D2");
 		button.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				initTableModel();
 			}

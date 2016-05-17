@@ -34,10 +34,13 @@ import java.util.HashMap;
 
 public class ViewStudentRecord extends View{
 	
-	private final JPanel contentPanel = new JPanel();
+	//Finals:
 	private static final String RECORD_NAME = "תלמיד";
+	private final String FL_PATTERN = "^[a-zA-Zא-ת'\" ]+$";
 	
-	//All components:
+	
+	//Components:
+	private final JPanel contentPanel = new JPanel();
 	private JFormattedTextField id;
 	private JFormattedTextField textField_f_name;
 	private JFormattedTextField textField_l_name;
@@ -107,7 +110,7 @@ public class ViewStudentRecord extends View{
 				pnlFields.add(pnlFullName);
 				{
 					try {
-						textField_l_name = new JFormattedTextField(new RegexFormatter("^[a-zA-Zא-ת' ]+$"));
+						textField_l_name = new JFormattedTextField(new RegexFormatter(FL_PATTERN));
 						textField_l_name.setDocument(new LimitDocument(25));
 						textField_l_name.setHorizontalAlignment(SwingConstants.RIGHT);
 					} catch (ParseException e) {
@@ -124,7 +127,7 @@ public class ViewStudentRecord extends View{
 					pnlFullName.add(label);
 				
 					try {
-						textField_f_name = new JFormattedTextField(new RegexFormatter("^[a-zA-Zא-ת' ]+$"));
+						textField_f_name = new JFormattedTextField(new RegexFormatter(FL_PATTERN));
 						textField_f_name.setDocument(new LimitDocument(25));
 						textField_f_name.setHorizontalAlignment(SwingConstants.RIGHT);
 					} catch (ParseException e) {

@@ -1,8 +1,6 @@
 package ui_done_tests;
 
 import java.sql.SQLException;
-import java.sql.Statement;
-
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -12,7 +10,6 @@ import org.junit.Test;
 
 import database.Condition;
 import database.DatabaseActions;
-import database.DatabaseConnection;
 import database.DatabaseUpdatingScripts;
 import tablesStructures.DoneTest;
 import ui_donetests.Grades;
@@ -21,7 +18,8 @@ public class GradesTest {
 
 	private final String TABLE_NAME = "DoneTests";
 	private final int TEST_ID = 1;
-	private final String STUDENT_FULL_NAME = "Moshe Rimok";
+	private final String F_NAME = "Moshe";
+	private final String L_NAME = "Rimok";
 	private final int STUDENT_ID = 318358587;
 	private final int GRADE = 95;
 	private DoneTest doneTest;
@@ -37,7 +35,7 @@ public class GradesTest {
 		doneTest.setTestid(TEST_ID);
 		doneTest.setGrade(GRADE);
 		try {
-			doneTest.setStudentid(Grades.getStudentID(STUDENT_FULL_NAME));
+			doneTest.setStudentid(Grades.getStudentID(F_NAME,L_NAME));
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

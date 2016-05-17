@@ -247,6 +247,7 @@ public class FoundedRecords extends JDialog {
 			}
 		}
 		
+		@Override
 		public TableStructure getRowStructure(int row){
 			return (TableStructure)dataVector.get(row);
 		}
@@ -267,6 +268,7 @@ public class FoundedRecords extends JDialog {
 			}
 		}
 		
+		@Override
 		@SuppressWarnings("unchecked")
 		public void replaceRow(int row, TableStructure structure) throws Exception {
 			if(!structure.getTableName().equals(table.getTableName()))

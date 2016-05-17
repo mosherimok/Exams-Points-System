@@ -5,8 +5,6 @@ import java.awt.event.ActionListener;
 import java.sql.SQLException;
 
 import javax.swing.JOptionPane;
-import javax.swing.JTable;
-
 import exceptions.InvalidStructure;
 import tablesStructures.TableStructure;
 import ui_components.CustomizedJTable;

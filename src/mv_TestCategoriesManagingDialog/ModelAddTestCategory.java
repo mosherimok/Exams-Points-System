@@ -6,7 +6,6 @@ import database.DatabaseActions;
 import database.DatabaseUpdatingScripts;
 import mvc_dialogs.AddRecord;
 import mvc_dialogs.Model;
-import tables.TblTestsCategories;
 
 public class ModelAddTestCategory extends Model implements AddRecord{
 

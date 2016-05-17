@@ -4,13 +4,9 @@ import javax.swing.JPanel;
 import javax.swing.JLabel;
 import javax.swing.JComboBox;
 
-import java.awt.Component;
-
-import javax.swing.Box;
 import javax.swing.DefaultComboBoxModel;
 
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import javax.swing.JTextField;
 
 

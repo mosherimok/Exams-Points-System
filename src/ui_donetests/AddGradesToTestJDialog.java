@@ -27,6 +27,7 @@ import database.DatabaseActions;
 import tablesStructures.DoneTest;
 import ui_donetests_components.Examinee;
 import ui_donetests_components.ExmainesDefaultListModel;
+import ui_donetests_components.SimpleStudent;
 
 import javax.swing.UIManager;
 import javax.swing.WindowConstants;
@@ -40,13 +41,6 @@ import java.util.HashMap;
 import java.awt.event.ActionEvent;
 import javax.swing.JScrollPane;
 import javax.swing.JComboBox;
-import javax.swing.Box;
-import java.awt.Dimension;
-import java.awt.Component;
-import java.awt.ComponentOrientation;
-
-import javax.swing.border.SoftBevelBorder;
-import javax.swing.border.BevelBorder;
 
 public class AddGradesToTestJDialog extends JDialog {
 
@@ -55,12 +49,12 @@ public class AddGradesToTestJDialog extends JDialog {
 	private final int TEST_ID;
 	
 	//Objects:
-	HashMap<Character, ArrayList<String>> israeliStudents = new HashMap<>();
-	HashMap<Character, ArrayList<String>> americanStudents = new HashMap<>();
+	HashMap<Character, ArrayList<SimpleStudent>> israeliStudents = new HashMap<>();
+	HashMap<Character, ArrayList<SimpleStudent>> americanStudents = new HashMap<>();
 	
 	//All components:
 	private JTextField textFieldStudentName;
-	private JComboBox<String> comboBox_Lookfor;
+	private JComboBox<SimpleStudent> comboBox_Lookfor;
 	private JSpinner grade;
 	private JList<Examinee> allExaminees;
 	private JButton btnRemoveFromList;
@@ -166,11 +160,12 @@ public class AddGradesToTestJDialog extends JDialog {
 					panel_1.setLayout(new BorderLayout(0, 0));
 					{
 						JLabel lblStudentName = new JLabel("\u05E9\u05DD \u05D4\u05EA\u05DC\u05DE\u05D9\u05D3:");
-						lblStudentName.setHorizontalAlignment(JLabel.CENTER);
-						lblStudentName.setVerticalAlignment(JLabel.CENTER);
+						lblStudentName.setHorizontalAlignment(SwingConstants.CENTER);
+						lblStudentName.setVerticalAlignment(SwingConstants.CENTER);
 						panel_1.add(lblStudentName, BorderLayout.NORTH);
 					}
 					textFieldStudentName = new JTextField();
+					textFieldStudentName.setHorizontalAlignment(SwingConstants.RIGHT);
 					panel_1.add(textFieldStudentName, BorderLayout.SOUTH);
 					
 					textFieldStudentName.getDocument().addDocumentListener(new DocumentListener() {
@@ -205,8 +200,8 @@ public class AddGradesToTestJDialog extends JDialog {
 					panelSuggestion.setLayout(new GridLayout(2, 0, 0, 0));
 					{
 						JLabel label = new JLabel("\u05D4\u05D0\u05DD \u05D0\u05EA\u05D4 \u05DE\u05D7\u05E4\u05E9 \u05D0\u05EA:");
-						label.setHorizontalAlignment(JLabel.CENTER);
-					    label.setVerticalAlignment(JLabel.CENTER);
+						label.setHorizontalAlignment(SwingConstants.CENTER);
+					    label.setVerticalAlignment(SwingConstants.CENTER);
 						panelSuggestion.add(label);
 					}
 					{
@@ -214,7 +209,7 @@ public class AddGradesToTestJDialog extends JDialog {
 						panelSuggestion.add(panel_1);
 						panel_1.setLayout(new BorderLayout(0, 0));
 						{
-							comboBox_Lookfor = new JComboBox();
+							comboBox_Lookfor = new JComboBox<SimpleStudent>();
 							panel_1.add(comboBox_Lookfor);
 							comboBox_Lookfor.addActionListener(new ActionListener() {
 								
@@ -267,11 +262,15 @@ public class AddGradesToTestJDialog extends JDialog {
 									JOptionPane.showMessageDialog(null, "אין תלמיד כזה");
 									return;
 								}
+								String f_name = ((SimpleStudent)comboBox_Lookfor.
+										getSelectedItem()).getF_name();
+								String l_name = ((SimpleStudent)comboBox_Lookfor.
+										getSelectedItem()).getL_name();
 								int Intgrade = (Integer)grade.getValue();
 								try {
-										int id = Grades.getStudentID(name);
+										int id = Grades.getStudentID(f_name,l_name);
 										
-										Examinee ex = new Examinee(name, Intgrade);
+										Examinee ex = new Examinee(f_name,l_name, Intgrade);
 										((ExmainesDefaultListModel)allExaminees.getModel()).
 											addElement(ex);
 										ex.setID(id);
@@ -353,22 +352,26 @@ public class AddGradesToTestJDialog extends JDialog {
 				
 				if((l+"").matches("[א-ת]")){
 					if(israeliStudents.containsKey(l))
-						israeliStudents.get(l).add(allData[0] + " " + allData[1]);
+						israeliStudents.get(l).add(new SimpleStudent(flnames[0].toString(),
+								flnames[1].toString()));
 					else{
-						ArrayList<String> flArray = new ArrayList<>();
-						flArray.add(flnames[0] + " " + flnames[1]);
+						ArrayList<SimpleStudent> flArray = new ArrayList<>();
+						flArray.add(new SimpleStudent(flnames[0].toString(),
+								flnames[1].toString()));
 						israeliStudents.put(l,flArray);
 					}
 				}
 				else{
 					l = Character.toLowerCase(l);
 					if(americanStudents.containsKey(l)){
-						americanStudents.get(l).add((flnames[0] + " " + flnames[1]).toLowerCase());
+						americanStudents.get(l).add(new SimpleStudent(flnames[0].toString().toLowerCase(),
+								flnames[1].toString().toLowerCase()));
 					}
 					else{
 						
-						ArrayList<String> flArray = new ArrayList<>();
-						flArray.add((flnames[0] + " " + flnames[1]).toLowerCase());
+						ArrayList<SimpleStudent> flArray = new ArrayList<>();
+						flArray.add(new SimpleStudent(flnames[0].toString().toLowerCase(),
+								flnames[1].toString().toLowerCase()));
 						americanStudents.put(l,flArray);
 					}
 				}
@@ -391,20 +394,22 @@ public class AddGradesToTestJDialog extends JDialog {
 		comboBox_Lookfor.removeAllItems();
 		char l = text.charAt(0);
 		if((l+"").matches("[א-ת]")){
-			ArrayList<String> related = israeliStudents.get(l);
+			ArrayList<SimpleStudent> related = israeliStudents.get(l);
 			if(related!=null){
-				for(String stds : related){
-					if(stds.startsWith(text))
-						comboBox_Lookfor.addItem(stds);
+				for(SimpleStudent std : related){
+					String fl = std.getF_name() + " " + std.getL_name();
+					if(fl.startsWith(text))
+						comboBox_Lookfor.addItem(std);
 				}
 			}
 		}
 		else if((l+"").matches("[A-Za-z]")){
-			ArrayList<String> related = americanStudents.get(l);
+			ArrayList<SimpleStudent> related = americanStudents.get(l);
 			if(related!=null){
-				for(String stds : related){
-					if(stds.startsWith(text))
-						comboBox_Lookfor.addItem(stds);
+				for(SimpleStudent std : related){
+					String fl = std.getF_name() + " " + std.getL_name();
+					if(fl.startsWith(text.toLowerCase()))
+						comboBox_Lookfor.addItem(std);
 				}
 			}
 		}
@@ -418,7 +423,8 @@ public class AddGradesToTestJDialog extends JDialog {
 
 	private boolean IsTextInCombobox(String text){
 		for(int i=0;i<comboBox_Lookfor.getItemCount();i++){
-			if(comboBox_Lookfor.getItemAt(i).equals(text))
+			SimpleStudent ss = comboBox_Lookfor.getItemAt(i);
+			if(ss.toString().equals(text))
 				return true;
 		}
 		return false;

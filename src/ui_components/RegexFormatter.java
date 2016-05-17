@@ -1,11 +1,9 @@
 package ui_components;
 
-import java.awt.Color;
 import java.text.ParseException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.text.DefaultFormatter;
 

@@ -6,8 +6,6 @@ import database.DatabaseActions;
 import database.DatabaseUpdatingScripts;
 import mvc_dialogs.AddRecord;
 import mvc_dialogs.Model;
-import tables.TblStudents;
-import tablesStructures.Student;
 
 public class ModelAddStudent extends Model implements AddRecord{
 	

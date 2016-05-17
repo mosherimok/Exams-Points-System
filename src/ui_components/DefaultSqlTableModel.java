@@ -11,6 +11,7 @@ public abstract class DefaultSqlTableModel extends DefaultTableModel{
 	
 	public abstract TableStructure getRowStructure(int row);
 	
+	@Override
 	public abstract Object getValueAt(int row, int column);
 
 	public abstract void replaceRow(int row, TableStructure structure) throws Exception;

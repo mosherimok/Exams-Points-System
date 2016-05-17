@@ -2,7 +2,6 @@ package ui_donetests_components;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
-import java.awt.Font;
 import java.sql.SQLException;
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -12,9 +11,6 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 import database.DatabaseActions;
 import ui_components.CustomizedJTable;
-import ui_components.TextAreaRenderer;
-
-import javax.swing.JTable;
 import javax.swing.WindowConstants;
 import javax.swing.JScrollPane;
 import java.awt.event.ActionListener;

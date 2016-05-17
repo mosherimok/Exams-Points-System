@@ -11,12 +11,13 @@ public class Grades {
 		DatabaseActions.executeUpdate(DatabaseUpdatingScripts.insertInto(test));
 	}
 	
-	public static int getStudentID(String studentFullName) throws SQLException {
-		String[] f_l_names = studentFullName.split(" ");
-		String query = "SELECT ID FROM Students WHERE f_name = '" + f_l_names[0] + "'" + 
-							" AND l_name = '" + f_l_names[1] + "'";
-		
-		int id = (int)DatabaseActions.getAllQueryData(query)[0][0];
+	public static int getStudentID(String firstName,String lastName) throws SQLException {
+		String query = "SELECT ID FROM Students WHERE f_name = '" + firstName + "'" + 
+							" AND l_name = '" + lastName + "'";
+		Object[][] value = DatabaseActions.getAllQueryData(query);
+		if(value.length==0)
+			throw new SQLException("No exists such student");
+		int id = (int)value[0][0];
 		if(id!=0)
 			return id;
 		else

@@ -1,14 +1,9 @@
 package database;
 
-import java.net.URL;
 import java.sql.*;
 import java.util.Properties;
 
-import javax.swing.JOptionPane;
-
-import org.sqlite.core.DB;
-
-import main.Main;
+import main.FilesConstants;
 
 public class DatabaseConnection {
 
@@ -17,7 +12,7 @@ public class DatabaseConnection {
 	//For system-file native.
 //	private final static String SERVER_ADDRES = "jdbc:sqlite:/"+"D:/Program Files (x86)/Exams-Points-System/Database/EPS.db";
 	//for IDE running native.
-	private final static String SERVER_ADDRES = "jdbc:sqlite:Resources/EPS.db";
+	private final static String SERVER_ADDRES = "jdbc:sqlite:/"+FilesConstants.DATABASE_FILE_PATH;
 	private static String IS_YEAR_DATE_TYPE = "false";
 	// End.
 	

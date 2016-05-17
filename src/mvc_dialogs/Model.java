@@ -2,7 +2,6 @@ package mvc_dialogs;
 
 import java.sql.SQLException;
 
-import tables.Table;
 import tablesStructures.TableStructure;
 
 public abstract class Model {

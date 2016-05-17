@@ -1,8 +1,6 @@
 package tablesStructures;
 
-import exceptions.InvalidStructure;
 import tables.Table;
-import tables.TblStudents;
 import tables.TblTestsCategories;
 
 public class TestCategory extends TableStructure{

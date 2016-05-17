@@ -5,8 +5,6 @@ import java.awt.event.ActionListener;
 import java.sql.SQLException;
 
 import javax.swing.JOptionPane;
-import javax.swing.JTable;
-
 import actions.MV_Factory.Views;
 import database.Condition;
 import database.DatabaseActions;
@@ -18,7 +16,6 @@ import mvc_dialogs.View;
 import tablesStructures.TableStructure;
 import ui_components.DefaultSqlTableModel;
 import ui_components.CustomizedJTable;
-import ui_components.ResultSetDefaultTableModel;
 
 public class ButtonsActions {
 
