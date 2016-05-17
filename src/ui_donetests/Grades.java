@@ -1,9 +1,6 @@
 package ui_donetests;
 
 import java.sql.SQLException;
-import java.sql.Statement;
-
-
 import database.DatabaseActions;
 import database.DatabaseUpdatingScripts;
 import tablesStructures.DoneTest;

@@ -1,13 +1,15 @@
-package ui_searchRecord;
+/*package ui_searchRecord;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 
+import javax.swing.DefaultListSelectionModel;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
 
 import actions.MV_Factory;
 import actions.MV_Factory.Views;
@@ -20,11 +22,12 @@ import mvc_dialogs.Model;
 import mvc_dialogs.View;
 import tables.Table;
 import tablesStructures.TableStructure;
-import ui_components.DefaultSqlTableModel;
-import ui_components.CustomizedJTable;
+import ui_components.JTableMenuPanels;
+import ui_main.MainScreen;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.WindowConstants;
 import javax.swing.border.EtchedBorder;
@@ -39,22 +42,19 @@ import java.sql.SQLException;
 import java.util.Vector;
 import java.awt.event.ActionEvent;
 
-public class FoundedRecords extends JDialog {
+public class FoundedRecords2 extends JDialog {
 	
-	//Objects members:
+	//All stuff:
 	private final Table table;
 	private MV_Factory mv_factory;
-	private Controller controller;
-	private boolean needToUpdateParentJTable;
 	
-	//Components:
+	//All Components:
 	private final JPanel contentPanel = new JPanel();
-	private CustomizedJTable jtable;
-	private CustomizedJTable jparent;
+	private JTable jtable;
 	private JButton buttonModify;
 	private JButton buttonDelete;
 
-	/**
+	*//**
 	 * Launch the application.
 	 *//*
 	public static void main(String[] args) {
@@ -65,18 +65,9 @@ public class FoundedRecords extends JDialog {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	}*/
-	public FoundedRecords(Table table,Object[][] data) {
-		this.table = table;
-		mv_factory = new MV_Factory(Views.valueOf(table.getTableName()));
-		initTable(data);
-		initGUI();
-		initDialog();
 	}
-	
-	public FoundedRecords(Table table,Object[][] data,CustomizedJTable jparent) {
+	public FoundedRecords2(Table table,Object[][] data) {
 		this.table = table;
-		this.jparent = jparent;
 		mv_factory = new MV_Factory(Views.valueOf(table.getTableName()));
 		initTable(data);
 		initGUI();
@@ -87,27 +78,21 @@ public class FoundedRecords extends JDialog {
 	private void initDialog() {
 		setModal(true);
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-		setLocationRelativeTo(null);
+		setVisible(true);
 		addWindowListener(new WindowAdapter() {
 			
 			@Override
 			public void windowClosing(WindowEvent e) {
-				if(needToUpdateParentJTable&&jparent!=null)
-					jparent.updateJTableData();
-					
 				super.windowClosing(e);
 			}
 			
 		});
-		setVisible(true);
-		
-		
 	}
 
 
-	/**
+	*//**
 	 * Create the dialog.
-	 */
+	 *//*
 	private void initGUI() {
 		setBounds(100, 100, 450, 300);
 		getContentPane().setLayout(new BorderLayout());
@@ -150,7 +135,8 @@ public class FoundedRecords extends JDialog {
 								condition);
 						try {
 							DatabaseActions.executeUpdate(script);
-							((DefaultSqlTableModel)jtable.getModel()).removeRow(jtable.getSelectedRow());
+							MainScreen.getCurrentViewPanel().refreshDataFromDB();
+							
 							buttonDelete.setEnabled(false);
 							buttonModify.setEnabled(false);
 						} catch (SQLException e1) {
@@ -175,8 +161,7 @@ public class FoundedRecords extends JDialog {
 						} catch (InvalidStructure e1) {
 							e1.printStackTrace();
 						}
-						controller = new Controller(view, model);
-						((DefaultSqlTableModel)jtable.getModel()).refreshData();
+						Controller controller = new Controller(view, model);
 					}
 				});
 				buttonModify.setEnabled(false);
@@ -193,8 +178,6 @@ public class FoundedRecords extends JDialog {
 				okButton.addActionListener(new ActionListener() {
 					@Override
 					public void actionPerformed(ActionEvent arg0) {
-						if(needToUpdateParentJTable&&jparent!=null)
-							jparent.updateJTableData();
 						dispose();
 					}
 				});
@@ -206,7 +189,7 @@ public class FoundedRecords extends JDialog {
 	}
 	
 	public void initTable(Object[][] data){
-		jtable = new CustomizedJTable(new CustomTableModel(data,table.getColumnsLabels()));
+		jtable = new JTable(new CustomTableModel(data,table.getColumnsLabels()));
 		jtable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		jtable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
 			
@@ -220,7 +203,7 @@ public class FoundedRecords extends JDialog {
 		});
 	}
 	
-	private class CustomTableModel extends DefaultSqlTableModel{
+	private class CustomTableModel extends DefaultTableModel{
 		
 		public CustomTableModel(Object[][] data,String[] labels){
 			dataVector = new Vector<TableStructure>();
@@ -255,28 +238,8 @@ public class FoundedRecords extends JDialog {
 		public boolean isCellEditable(int row, int column) {
 			return false;
 		}
-
-		@Override
-		public void refreshData() {
-			try {
-				replaceRow(jtable.getSelectedRow(), controller.getNewTableStructure());
-				fireTableDataChanged();
-				needToUpdateParentJTable = true;
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-		
-		@SuppressWarnings("unchecked")
-		public void replaceRow(int row, TableStructure structure) throws Exception {
-			if(!structure.getTableName().equals(table.getTableName()))
-				throw new InvalidStructure("Given mismatch table structure.\nExpected: "+
-							table.getTableName() + " But found " + structure.getTableName());
-			
-			dataVector.remove(row);
-			dataVector.add(row, structure);
-		}
 	
 	}
 
 }
+*/

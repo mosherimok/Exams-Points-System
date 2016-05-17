@@ -2,8 +2,8 @@ package mvc_dialogs;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
+import javax.swing.WindowConstants;
 
-import exceptions.ImproperFieldsValues;
 import exceptions.InvalidStructure;
 import tablesStructures.TableStructure;
 
@@ -22,7 +22,7 @@ public abstract class View extends JDialog{
 	
 	public void initJDialog(){
 		setLocationRelativeTo(null);
-		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		setModal(true);
 		setVisible(true);
 	}
@@ -31,6 +31,6 @@ public abstract class View extends JDialog{
 	
 	public abstract void putStructureIntoFields(TableStructure structure) throws InvalidStructure;
 
-//	public abstract void validateFieldsProperiety() throws ImproperFieldsValues;
+	public abstract boolean fieldsAreNotEmpty();
 	
 }

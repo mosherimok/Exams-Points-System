@@ -1,10 +1,8 @@
 package tablesStructures;
 
-import exceptions.InvalidStructure;
 import tables.Table;
-import tables.TableGetter;
+//import tables.TableGetter;
 import tables.TblDoneTests;
-import tables.TblStudents;
 
 public class DoneTest extends TableStructure{
 
@@ -70,7 +68,7 @@ public class DoneTest extends TableStructure{
 	
 	@Override
 	public Table getTableObject() {
-		return TableGetter.getTable(TblDoneTests.class);
+		return new TblDoneTests();
 	}
 
 

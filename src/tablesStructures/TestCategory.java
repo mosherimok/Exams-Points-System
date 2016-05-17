@@ -2,7 +2,6 @@ package tablesStructures;
 
 import exceptions.InvalidStructure;
 import tables.Table;
-import tables.TableGetter;
 import tables.TblStudents;
 import tables.TblTestsCategories;
 
@@ -64,7 +63,7 @@ public class TestCategory extends TableStructure{
 	
 	@Override
 	public Table getTableObject() {
-		return TableGetter.getTable(TblTestsCategories.class);
+		return new TblTestsCategories();
 	}
 
 	@Override

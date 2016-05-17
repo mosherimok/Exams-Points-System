@@ -4,7 +4,6 @@ import java.text.ParseException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.swing.text.DefaultFormatter;
 import javax.swing.text.MaskFormatter;
 
 public class RegexMaskFormatter extends MaskFormatter{

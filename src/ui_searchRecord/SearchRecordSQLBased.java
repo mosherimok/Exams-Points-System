@@ -4,8 +4,6 @@ import javax.swing.JPanel;
 import javax.swing.JLabel;
 import javax.swing.JComboBox;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.awt.Component;
 
 import javax.swing.Box;
@@ -13,15 +11,10 @@ import javax.swing.DefaultComboBoxModel;
 
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-
 import javax.swing.JTextField;
 
 
 import database.DatabaseActions;
-import database.ResultSetManipulation;
 import tables.Table;
 
 import javax.swing.JButton;
@@ -29,11 +22,9 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.ActionEvent;
-import java.awt.GridLayout;
 import javax.swing.border.EtchedBorder;
-import javax.swing.border.SoftBevelBorder;
-import javax.swing.border.BevelBorder;
 import javax.swing.SwingConstants;
+import java.awt.GridLayout;
 
 public class SearchRecordSQLBased extends JPanel {
 	//All members:
@@ -44,11 +35,12 @@ public class SearchRecordSQLBased extends JPanel {
 	private JLabel label_searchFor;
 	private JComboBox<String> comboBox_primaryCriteria;
 	private JTextField textField;
-	private Component rigidArea_1;
 	private JButton button_search;
 	private JLabel label_secondarySearch;
 	private JComboBox<String> comboBox_secondaryCriteria;
-	private Component rigidArea_2;
+	private JPanel panelCriterias;
+	private JPanel panelTextfield;
+	private JPanel panelSearchButton;
 	
 	
 
@@ -63,27 +55,31 @@ public class SearchRecordSQLBased extends JPanel {
 	}
 	private void initGUI() {
 		setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
-		setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+		setLayout(new GridLayout(3, 0, 0, 0));
 		
-		button_search = new JButton("\u05D7\u05E4\u05E9");
-		button_search.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				try {
-					searchingHandle();
-				} catch (Exception e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-			}
-		});
-		add(button_search);
+		panelCriterias = new JPanel();
+		add(panelCriterias);
 		
-		rigidArea_2 = Box.createRigidArea(new Dimension(20, 20));
-		add(rigidArea_2);
-		rigidArea_2.setPreferredSize(new Dimension(10, 20));
+		comboBox_secondaryCriteria = new JComboBox<String>();
+		panelCriterias.add(comboBox_secondaryCriteria);
+		comboBox_secondaryCriteria.setModel(new DefaultComboBoxModel<>(criterias));
+		comboBox_secondaryCriteria.setSelectedIndex(-1);
+		
+		label_secondarySearch = new JLabel("\u05D7\u05D9\u05E4\u05D5\u05E9 \u05DE\u05E9\u05E0\u05D9 (\u05DC\u05D0 \u05D7\u05D5\u05D1\u05D4):");
+		panelCriterias.add(label_secondarySearch);
+		
+		comboBox_primaryCriteria = new JComboBox<String>();
+		panelCriterias.add(comboBox_primaryCriteria);
+		comboBox_primaryCriteria.setModel(new DefaultComboBoxModel<>(criterias));
+		
+		label_searchFor = new JLabel("\u05D7\u05E4\u05E9 \u05E2\u05D1\u05D5\u05E8:");
+		panelCriterias.add(label_searchFor);
+		
+		panelTextfield = new JPanel();
+		add(panelTextfield);
 		
 		textField = new JTextField();
-		add(textField);
+		panelTextfield.add(textField);
 		textField.setHorizontalAlignment(SwingConstants.RIGHT);
 		textField.setToolTipText("\u05D4\u05E7\u05DC\u05D3 \u05DC\u05D7\u05D9\u05E4\u05D5\u05E9");
 		textField.setSize(new Dimension(80, 20));
@@ -101,23 +97,22 @@ public class SearchRecordSQLBased extends JPanel {
 			}
 		});
 		
-		rigidArea_1 = Box.createRigidArea(new Dimension(20, 20));
-		add(rigidArea_1);
+		panelSearchButton = new JPanel();
+		add(panelSearchButton);
 		
-		comboBox_secondaryCriteria = new JComboBox<String>();
-		add(comboBox_secondaryCriteria);
-		comboBox_secondaryCriteria.setModel(new DefaultComboBoxModel<>(criterias));
-		comboBox_secondaryCriteria.setSelectedIndex(-1);
-		
-		label_secondarySearch = new JLabel("\u05D7\u05D9\u05E4\u05D5\u05E9 \u05DE\u05E9\u05E0\u05D9 (\u05DC\u05D0 \u05D7\u05D5\u05D1\u05D4):");
-		add(label_secondarySearch);
-		
-		comboBox_primaryCriteria = new JComboBox<String>();
-		add(comboBox_primaryCriteria);
-		comboBox_primaryCriteria.setModel(new DefaultComboBoxModel<>(criterias));
-		
-		label_searchFor = new JLabel("\u05D7\u05E4\u05E9 \u05E2\u05D1\u05D5\u05E8:");
-		add(label_searchFor);
+		button_search = new JButton("\u05D7\u05E4\u05E9");
+		panelSearchButton.add(button_search);
+		button_search.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				try {
+					searchingHandle();
+				} catch (Exception e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+		});
 	}
 	
 	private void searchingHandle() throws Exception{
@@ -140,6 +135,7 @@ public class SearchRecordSQLBased extends JPanel {
 			script = String.format(table.getSelectAllScript()+" WHERE %s='%s'",
 					columnIdentifier1,textField.getText());
 		
+		System.out.println(script);
 		Object[][] fetchedData = DatabaseActions.getAllQueryData(script);
 
 		

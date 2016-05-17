@@ -1,4 +1,4 @@
-package mvc_tests;
+package mv_TestsManagingDialog;
 
 import java.sql.SQLException;
 
@@ -7,7 +7,6 @@ import database.DatabaseActions;
 import database.DatabaseUpdatingScripts;
 import mvc_dialogs.Model;
 import mvc_dialogs.ModifyRecord;
-import tables.TableGetter;
 import tables.TblTests;
 import tablesStructures.Test;
 
@@ -16,7 +15,6 @@ public class ModelModifyTest extends Model implements ModifyRecord{
 	private Condition condition = new Condition();
 	
 	public ModelModifyTest(Test oldTest) {
-		super(TableGetter.getTable(TblTests.class));
 		setStructure(oldTest);
 		condition.addCondition(oldTest.getPrimaryKey());
 //		String[] primnames = oldTest.getPrimaryKeyName();

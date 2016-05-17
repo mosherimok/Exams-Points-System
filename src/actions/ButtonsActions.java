@@ -1,81 +1,107 @@
 package actions;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.SQLException;
+
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
 
-import actionListeners.Action;
 import actions.MV_Factory.Views;
+import database.Condition;
+import database.DatabaseActions;
+import database.DatabaseUpdatingScripts;
 import exceptions.InvalidStructure;
 import mvc_dialogs.Controller;
 import mvc_dialogs.Model;
 import mvc_dialogs.View;
-import tables.Table;
 import tablesStructures.TableStructure;
+import ui_components.DefaultSqlTableModel;
+import ui_components.CustomizedJTable;
 import ui_components.ResultSetDefaultTableModel;
 
 public class ButtonsActions {
 
-	protected JTable jtable;
+	protected CustomizedJTable jtable;
 	private MV_Factory MVfactory;
 	/**
 	 * Add and Modify dialogs View (Mvc)
 	 */
-//	protected View VIEW;
-//	private Table sqlTable;
 	
-	public ButtonsActions(JTable table,Views view){
-		this.jtable = table;
+	/*public ButtonsActions(Views view){
 		this.MVfactory = new MV_Factory(view);
-		/*this.VIEW = view;
-		this.sqlTable = sqlTable;*/
+	}*/
+	
+	public ButtonsActions(CustomizedJTable jtable,Views view){
+		this.jtable = jtable;
+		this.MVfactory = new MV_Factory(view);
 	}
 	
-//	public abstract boolean addAction();
-//	public abstract boolean modifyAction();
 	
-	public final Action getAddAction(){
-		return new Action() {
+	public final ActionListener getAddAction(){
+		return new ActionListener() {
 			
 			@Override
-			public void perform() {
-//				boolean result = addAction();
+			public void actionPerformed(ActionEvent e) {
 				View view = MVfactory.getView();
 				Model model = MVfactory.getAddModel();
-				Controller controller = new Controller(view, model);
-				if(controller.isNeedToRefreshJTableData())
-					updateJTable();
-				else
-					System.out.println("NOT NEED TO REFRESH in table ");
+//				if(jtable!=null){
+					Controller controller = new Controller(view, model,jtable);
+//				}
+//				else{
+//					Controller controller = new Controller(view, model);
+//				}
 			}
 		};
 	}
 	
-	public final Action getModifyAction(){
-		return new Action() {
+	public final ActionListener getModifyAction(){
+		return new ActionListener() {
 			
 			@Override
-			public void perform() {
-//				boolean result = modifyAction();
+			public void actionPerformed(ActionEvent e) {
 				int selectedRow = jtable.getSelectedRow();
-				TableStructure oldStructure = ((ResultSetDefaultTableModel)jtable.getModel()).
+				TableStructure oldStructure = ((DefaultSqlTableModel)jtable.getModel()).
 						getRowStructure(selectedRow);
 				
 				View view = MVfactory.getView();
 				Model model;
 				try {
 					model = MVfactory.getModifyModel(oldStructure);
-					Controller controller = new Controller(view, model);
-					if(controller.isNeedToRefreshJTableData())
-						updateJTable();
-				} catch (InvalidStructure e) {
-					e.printStackTrace();
+//					if(jtable!=null){
+						Controller controller = new Controller(view, model,jtable);
+//					}
+//					else{
+//						Controller controller = new Controller(view, model);
+//					}
+				} catch (InvalidStructure ex) {
+					ex.printStackTrace();
 				}
 			}
 		};
 	}
 	
-	
-	private void updateJTable(){
-		((ResultSetDefaultTableModel)jtable.getModel()).refreshData();
-		jtable.getParent().getParent().repaint();
+	public final ActionListener getDeleteAction(){
+		return new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(JOptionPane.showConfirmDialog(null, "האם אתה בטוח שברצונך למחוק רשומה זו?","התרעה לפני מחיקה",JOptionPane.OK_CANCEL_OPTION)==JOptionPane.CANCEL_OPTION)
+					return;
+				int selectedRow = jtable.getSelectedRow();
+				TableStructure structure = ((DefaultSqlTableModel)jtable.getModel()).
+						getRowStructure(selectedRow);
+				
+				Condition condition = new Condition(structure.getPrimaryKey());
+				
+				String script = DatabaseUpdatingScripts.deleteFrom(MVfactory.getViewType().toString(),
+						condition);
+				try {
+					DatabaseActions.executeUpdate(script);
+					jtable.updateJTableData();
+				} catch (SQLException e1) {
+					e1.printStackTrace();
+				}
+			}
+		};
 	}
 }

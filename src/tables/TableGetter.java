@@ -1,4 +1,4 @@
-package tables;
+/*package tables;
 
 import java.util.HashMap;
 
@@ -20,3 +20,4 @@ public class TableGetter {
 	}
 	
 }
+*/

@@ -1,4 +1,4 @@
-package mvc_testsCategories;
+package mv_TestCategoriesManagingDialog;
 
 import java.sql.SQLException;
 
@@ -8,7 +8,6 @@ import database.DatabaseUpdatingScripts;
 import mvc_dialogs.Model;
 import mvc_dialogs.ModifyRecord;
 import tables.Table;
-import tables.TableGetter;
 import tables.TblTestsCategories;
 import tablesStructures.TestCategory;
 
@@ -18,7 +17,6 @@ public class ModelModifyTestCategory extends Model implements ModifyRecord{
 
 	
 	public ModelModifyTestCategory(TestCategory tc) {
-		super(TableGetter.getTable(TblTestsCategories.class));
 		setStructure(tc);
 //		condition.addCondition(tc.getPrimaryKeyName()[0], tc.getPrimaryKeyValue()[0]);
 		condition.addCondition(tc.getPrimaryKey());

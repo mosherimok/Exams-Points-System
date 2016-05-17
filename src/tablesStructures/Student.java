@@ -5,7 +5,6 @@ import java.util.Iterator;
 
 import exceptions.InvalidStructure;
 import tables.Table;
-import tables.TableGetter;
 import tables.TblStudents;
 import tables.TblTests;
 
@@ -83,7 +82,7 @@ public class Student extends TableStructure{
 	
 	@Override
 	public Table getTableObject() {
-		return TableGetter.getTable(TblStudents.class);
+		return new TblStudents();
 	}
 	
 	@Override

@@ -30,6 +30,7 @@ public class Examinee {
 		return id;
 	}
 	
+	@Override
 	public String toString(){
 		return "<html>Name: " + name + " " + "<br> " + "Grade: " + grade + " " +  "</html>";
 	}

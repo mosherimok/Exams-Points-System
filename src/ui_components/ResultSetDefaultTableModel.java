@@ -5,10 +5,11 @@ import java.sql.SQLException;
 import javax.swing.table.DefaultTableModel;
 
 import database.DatabaseActions;
+import exceptions.InvalidStructure;
 import tables.Table;
 import tablesStructures.TableStructure;
 
-public class ResultSetDefaultTableModel extends DefaultTableModel{
+public class ResultSetDefaultTableModel extends DefaultSqlTableModel{
 
 	private static final long serialVersionUID = 1L;
 	private Table sqlTable;
@@ -83,14 +84,14 @@ public class ResultSetDefaultTableModel extends DefaultTableModel{
 		
 	}
 	
-	public void replaceRow(int selectedRow, Object[] newValues) throws Exception {
-		if(newValues.length!=columnIdentifiers.size())
-			throw new Exception("Mismatch between expected and actual new values");
-		for(int i=0;i<columnIdentifiers.size();i++){
-			if(! newValues[i].getClass().equals(getValueAt(selectedRow, i).getClass()))
-				throw new Exception("Data type of index " + i + " is not fit to column's data type");
-			setValueAt(newValues[i],selectedRow,i);
-		}
+	@SuppressWarnings("unchecked")
+	public void replaceRow(int row, TableStructure structure) throws Exception {
+		if(!structure.getTableName().equals(sqlTable.getTableName()))
+			throw new InvalidStructure("Given mismatch table structure.\nExpected: "+
+						sqlTable.getTableName() + " But found " + structure.getTableName());
+		
+		dataVector.remove(row);
+		dataVector.add(row, structure);
 	}
 
 }

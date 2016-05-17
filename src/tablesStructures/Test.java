@@ -4,13 +4,12 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 import tables.Table;
-import tables.TableGetter;
 import tables.TblTests;
 
 public class Test extends TableStructure{
 	//IMPORTANT:TODO: Change the pk in this table in mysql. name,category and testdate
 	// should be the right pk.
-	private Integer testid; // auto_increment.
+	private Integer testid; // "rowid" in sqlite.
 	private String name;
 	private String category;
 	private String testDate;
@@ -21,6 +20,14 @@ public class Test extends TableStructure{
 		initFromArray(values);
 	}
 	
+	public Integer getTestid() {
+		return testid;
+	}
+
+	public void setTestid(Integer testid) {
+		this.testid = testid;
+	}
+
 	public String getName() {
 		return name;
 	}
@@ -74,7 +81,7 @@ public class Test extends TableStructure{
 
 	@Override
 	public Table getTableObject() {
-		return TableGetter.getTable(TblTests.class);
+		return new TblTests();
 	}
 	
 

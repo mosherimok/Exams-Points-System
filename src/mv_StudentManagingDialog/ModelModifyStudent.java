@@ -1,4 +1,4 @@
-package mvc_students;
+package mv_StudentManagingDialog;
 
 import java.sql.SQLException;
 
@@ -7,7 +7,6 @@ import database.DatabaseActions;
 import database.DatabaseUpdatingScripts;
 import mvc_dialogs.Model;
 import mvc_dialogs.ModifyRecord;
-import tables.TableGetter;
 import tables.TblStudents;
 import tablesStructures.Student;
 
@@ -16,7 +15,6 @@ public class ModelModifyStudent extends Model implements ModifyRecord{
 	private Condition condition = new Condition();
 	
 	public ModelModifyStudent(Student oldStudent) {
-		super(TableGetter.getTable(TblStudents.class));
 		setStructure(oldStudent);
 //		condition.addCondition(oldStudent.getPrimaryKeyName()[0], oldStudent.getPrimaryKeyValue()[0]);
 		condition.addCondition(oldStudent.getPrimaryKey());

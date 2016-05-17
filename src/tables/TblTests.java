@@ -2,8 +2,6 @@ package tables;
 
 import java.util.Date;
 
-import tablesStructures.Student;
-import tablesStructures.TableStructure;
 import tablesStructures.Test;
 
 public class TblTests extends Table{
@@ -51,8 +49,13 @@ public class TblTests extends Table{
 		return new Test(data);
 	}
 	
-	@Override
+	/*@Override
 	public String getSelectAllScript() {
+		return "SELECT rowid,* FROM Tests limit 5";
+	}*/
+	
+	@Override
+	public String getSelectAllScript(){
 		return "SELECT rowid,* FROM Tests";
 	}
 }

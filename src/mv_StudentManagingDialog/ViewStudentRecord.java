@@ -1,4 +1,4 @@
-package mvc_students;
+package mv_StudentManagingDialog;
 
 import javax.swing.Box;
 import javax.swing.JButton;
@@ -6,7 +6,6 @@ import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
-import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
@@ -28,8 +27,6 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 import java.awt.font.TextAttribute;
 import java.text.ParseException;
 import java.time.LocalDate;
@@ -41,10 +38,10 @@ public class ViewStudentRecord extends View{
 	private static final String RECORD_NAME = "תלמיד";
 	
 	//All components:
-	public JFormattedTextField id;
-	public JFormattedTextField textField_f_name;
-	public JFormattedTextField textField_l_name;
-	public JSpinner rec_year,points;
+	private JFormattedTextField id;
+	private JFormattedTextField textField_f_name;
+	private JFormattedTextField textField_l_name;
+	private JSpinner rec_year,points;
 	
 	public ViewStudentRecord() {
 		super(RECORD_NAME);
@@ -86,8 +83,6 @@ public class ViewStudentRecord extends View{
 				pnlID.setLayout(new FlowLayout(FlowLayout.RIGHT, 5, 5));
 				{
 					id = new JFormattedTextField();
-//					try {
-//						MaskFormatter mask = new MaskFormatter("###-###-###");
 					RegexMaskFormatter rmf;
 					try {
 						rmf = new RegexMaskFormatter("###-###-###","\\d\\d\\d-\\d\\d\\d-\\d\\d\\d");
@@ -96,10 +91,7 @@ public class ViewStudentRecord extends View{
 						e.printStackTrace();
 					}
 						
-						
-/*					} catch (ParseException e) {
-						e.printStackTrace();
-					}*/
+
 					
 					id.setColumns(9);
 					pnlID.add(id);
@@ -115,7 +107,7 @@ public class ViewStudentRecord extends View{
 				pnlFields.add(pnlFullName);
 				{
 					try {
-						textField_l_name = new JFormattedTextField(new RegexFormatter("^[a-zA-Zא-ת']+$"));
+						textField_l_name = new JFormattedTextField(new RegexFormatter("^[a-zA-Zא-ת' ]+$"));
 						textField_l_name.setDocument(new LimitDocument(25));
 						textField_l_name.setHorizontalAlignment(SwingConstants.RIGHT);
 					} catch (ParseException e) {
@@ -130,25 +122,15 @@ public class ViewStudentRecord extends View{
 				{
 					JLabel label = new JLabel("\u05E9\u05DD \u05DE\u05E9\u05E4\u05D7\u05D4:");
 					pnlFullName.add(label);
-				}
-				{
+				
 					try {
-						textField_f_name = new JFormattedTextField(new RegexFormatter("^[a-zA-Zא-ת']+$"));
+						textField_f_name = new JFormattedTextField(new RegexFormatter("^[a-zA-Zא-ת' ]+$"));
 						textField_f_name.setDocument(new LimitDocument(25));
 						textField_f_name.setHorizontalAlignment(SwingConstants.RIGHT);
 					} catch (ParseException e) {
 						e.printStackTrace();
 					}
 					
-					/*textField_f_name.addKeyListener(new KeyAdapter() {
-						
-						@Override
-						public void keyTyped(KeyEvent e) {
-							if(!Character.isLetter(e.getKeyChar())||
-									textField_f_name.getText().length()>20)
-								e.consume();
-						}
-					});*/
 					pnlFullName.add(textField_f_name);
 					textField_f_name.setColumns(20);
 				}
@@ -202,6 +184,7 @@ public class ViewStudentRecord extends View{
 				//Clear Button
 				JButton button = new JButton("\u05E0\u05E7\u05D4 \u05D4\u05DB\u05DC");
 				button.addActionListener(new ActionListener() {
+					@Override
 					public void actionPerformed(ActionEvent arg0) {
 						id.setValue(null);
 						textField_f_name.setText("");
@@ -215,6 +198,7 @@ public class ViewStudentRecord extends View{
 			{
 				JButton button = new JButton("\u05D1\u05D9\u05D8\u05D5\u05DC");
 				button.addActionListener(new ActionListener() {
+					@Override
 					public void actionPerformed(ActionEvent arg0) {
 						dispose();
 					}
@@ -257,6 +241,19 @@ public class ViewStudentRecord extends View{
 		rec_year.setValue(student.getReceptionYear());
 		
 		points.setValue(student.getPoints());
+	}
+
+
+
+	@Override
+	public boolean fieldsAreNotEmpty() {
+		if(id.getText().equals(""))
+			return false;
+		if(textField_f_name.getText().equals(""))
+			return false;
+		if(textField_l_name.getText().equals(""))
+			return false;
+		return true;
 	}
 	
 }

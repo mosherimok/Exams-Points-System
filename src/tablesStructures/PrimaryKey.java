@@ -1,7 +1,6 @@
 package tablesStructures;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 
 public class PrimaryKey implements Iterable<Object[]>{

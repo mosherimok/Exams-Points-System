@@ -1,16 +1,23 @@
 package database;
 
+import java.net.URL;
 import java.sql.*;
 import java.util.Properties;
+
+import javax.swing.JOptionPane;
+
+import org.sqlite.core.DB;
+
+import main.Main;
 
 public class DatabaseConnection {
 
 	// Connection properties values [see initPropeties() ]:
-	private final static String USER_NAME="root"; // remote mysql server username: kbyroot
-	private final static String PASSWORD = "Moshe124578";
 	private final static String DRIVER_CLASS = "org.sqlite.JDBC";
+	//For system-file native.
+//	private final static String SERVER_ADDRES = "jdbc:sqlite:/"+"D:/Program Files (x86)/Exams-Points-System/Database/EPS.db";
+	//for IDE running native.
 	private final static String SERVER_ADDRES = "jdbc:sqlite:Resources/EPS.db";
-//	private final String SERVER_ADDRES = "jdbc:mysql://johnny.heliohost.org/kbyroot_eps";
 	private static String IS_YEAR_DATE_TYPE = "false";
 	// End.
 	
@@ -32,8 +39,8 @@ public class DatabaseConnection {
 	
 	private static Properties initProperties(){
 		Properties properties = new Properties();
-		properties.put("user",USER_NAME);
-		properties.put("password", PASSWORD);
+//		properties.put("user",USER_NAME);
+//		properties.put("password", PASSWORD);
 		properties.put("yearIsDateType",IS_YEAR_DATE_TYPE);
 		return properties;
 	}

@@ -1,9 +1,12 @@
 package ui_components;
 
+import java.awt.Color;
 import java.text.ParseException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.text.DefaultFormatter;
 
 public class RegexFormatter extends DefaultFormatter{
@@ -45,7 +48,10 @@ public class RegexFormatter extends DefaultFormatter{
 			if(matcher.matches()){
 				return super.stringToValue(text);
 			}
-			throw new ParseException("Pattern did not match", 0);
+			if(!text.equals("")){
+				JOptionPane.showMessageDialog(null,"שדה זה אינו תקין. אנא הקלד ערך הגיוני");
+				return text.substring(0,text.length()-1);
+			}
 		}
 		return text;
 	}

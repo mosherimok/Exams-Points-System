@@ -15,7 +15,6 @@ import java.awt.GridLayout;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.SpinnerNumberModel;
-import javax.swing.SwingConstants;
 import javax.swing.JSpinner;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.DocumentEvent;
@@ -40,15 +39,8 @@ import java.util.HashMap;
 import java.awt.event.ActionEvent;
 import javax.swing.JScrollPane;
 import javax.swing.JComboBox;
-import javax.swing.Box;
-import java.awt.Dimension;
-import java.awt.Component;
-import java.awt.ComponentOrientation;
 
-import javax.swing.border.SoftBevelBorder;
-import javax.swing.border.BevelBorder;
-
-public class AddGradesToTestJDialog extends JDialog {
+public class AddGradesToTestJDialog2 extends JDialog {
 
 	//finals:
 	private final JPanel contentPanel = new JPanel();
@@ -68,7 +60,7 @@ public class AddGradesToTestJDialog extends JDialog {
 	// END
 	
 	
-	public AddGradesToTestJDialog(int testID) {
+	public AddGradesToTestJDialog2(int testID) {
 		TEST_ID = testID;
 		DatabaseActions.setCloseConnectionWhenDone(false);
 		initAllStudents();
@@ -154,101 +146,92 @@ public class AddGradesToTestJDialog extends JDialog {
 			JPanel panelFieldsAndButtons = new JPanel();
 			panelFieldsAndButtons.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "\u05E4\u05E8\u05D8\u05D9 \u05D4\u05E0\u05D1\u05D7\u05DF", TitledBorder.CENTER, TitledBorder.TOP, null, new Color(0, 0, 0)));
 			contentPanel.add(panelFieldsAndButtons, BorderLayout.CENTER);
-			panelFieldsAndButtons.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+			panelFieldsAndButtons.setLayout(new GridLayout(3, 0, 0, 0));
 			{
-				JPanel panel = new JPanel();
-				panel.setBorder(new EtchedBorder(EtchedBorder.RAISED, null, null));
-				panelFieldsAndButtons.add(panel);
-				panel.setLayout(new GridLayout(0, 1, 0, 0));
+				JPanel panelStudentName = new JPanel();
+				panelStudentName.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
+				panelFieldsAndButtons.add(panelStudentName);
+				panelStudentName.setLayout(new GridLayout(2, 0, 0, 0));
 				{
-					JPanel panel_1 = new JPanel();
-					panel.add(panel_1);
-					panel_1.setLayout(new BorderLayout(0, 0));
+					JPanel panel = new JPanel();
+					panelStudentName.add(panel);
 					{
-						JLabel lblStudentName = new JLabel("\u05E9\u05DD \u05D4\u05EA\u05DC\u05DE\u05D9\u05D3:");
-						lblStudentName.setHorizontalAlignment(JLabel.CENTER);
-						lblStudentName.setVerticalAlignment(JLabel.CENTER);
-						panel_1.add(lblStudentName, BorderLayout.NORTH);
-					}
-					textFieldStudentName = new JTextField();
-					panel_1.add(textFieldStudentName, BorderLayout.SOUTH);
-					
-					textFieldStudentName.getDocument().addDocumentListener(new DocumentListener() {
+						textFieldStudentName = new JTextField();
 						
-						@Override
-						public void removeUpdate(DocumentEvent e) {
-							if(textFieldStudentName.getText().equals("")){
-								ActionListener previous = comboBox_Lookfor.getActionListeners()[0];
-								comboBox_Lookfor.removeActionListener(previous);
-								comboBox_Lookfor.removeAllItems();
-								comboBox_Lookfor.addActionListener(previous);
+						textFieldStudentName.getDocument().addDocumentListener(new DocumentListener() {
+							
+							@Override
+							public void removeUpdate(DocumentEvent e) {
+								if(textFieldStudentName.getText().equals("")){
+									ActionListener previous = comboBox_Lookfor.getActionListeners()[0];
+									comboBox_Lookfor.removeActionListener(previous);
+									comboBox_Lookfor.removeAllItems();
+									comboBox_Lookfor.addActionListener(previous);
+								}
+								else{
+									System.out.println("Text deleted");
+									updateIfStudentFound(textFieldStudentName.getText());
+								}
 							}
-							else{
-								System.out.println("Text deleted");
+							
+							@Override
+							public void insertUpdate(DocumentEvent e) {
 								updateIfStudentFound(textFieldStudentName.getText());
 							}
-						}
-						
-						@Override
-						public void insertUpdate(DocumentEvent e) {
-							updateIfStudentFound(textFieldStudentName.getText());
-						}
-						
-						@Override
-						public void changedUpdate(DocumentEvent e) {}
-					});
-					textFieldStudentName.setColumns(10);
-				}
-				{
-					JPanel panelSuggestion = new JPanel();
-					panel.add(panelSuggestion);
-					panelSuggestion.setLayout(new GridLayout(2, 0, 0, 0));
-					{
-						JLabel label = new JLabel("\u05D4\u05D0\u05DD \u05D0\u05EA\u05D4 \u05DE\u05D7\u05E4\u05E9 \u05D0\u05EA:");
-						label.setHorizontalAlignment(JLabel.CENTER);
-					    label.setVerticalAlignment(JLabel.CENTER);
-						panelSuggestion.add(label);
+							
+							@Override
+							public void changedUpdate(DocumentEvent e) {}
+						});
+
+						panel.add(textFieldStudentName);
+						textFieldStudentName.setColumns(10);
 					}
 					{
-						JPanel panel_1 = new JPanel();
-						panelSuggestion.add(panel_1);
-						panel_1.setLayout(new BorderLayout(0, 0));
-						{
-							comboBox_Lookfor = new JComboBox();
-							panel_1.add(comboBox_Lookfor);
-							comboBox_Lookfor.addActionListener(new ActionListener() {
-								
-								@Override
-								public void actionPerformed(ActionEvent e) {
-									textFieldStudentName.setText(comboBox_Lookfor.getSelectedItem().toString());
-								}
-							});
-						}
+						JLabel lblStudentName = new JLabel("\u05E9\u05DD \u05D4\u05EA\u05DC\u05DE\u05D9\u05D3:");
+						panel.add(lblStudentName);
 					}
 				}
 				{
-					JPanel panelTestGrade = new JPanel();
-					panel.add(panelTestGrade);
-					panelTestGrade.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+					JPanel panel = new JPanel();
+					panelStudentName.add(panel);
 					{
-						JPanel panel_1 = new JPanel();
-						panel_1.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
-						panelTestGrade.add(panel_1);
-						{
-							grade = new JSpinner(new SpinnerNumberModel(0,0,100,1));
-							panel_1.add(grade);
-						}
-						{
-							JLabel lblGrade = new JLabel("\u05E6\u05D9\u05D5\u05DF:");
-							panel_1.add(lblGrade);
-						}
+						comboBox_Lookfor = new JComboBox();
+						comboBox_Lookfor.addActionListener(new ActionListener() {
+							
+							@Override
+							public void actionPerformed(ActionEvent e) {
+								textFieldStudentName.setText(comboBox_Lookfor.getSelectedItem().toString());
+							}
+						});
+						panel.add(comboBox_Lookfor);
+					}
+					{
+						JLabel label = new JLabel("\u05D4\u05D0\u05DD \u05D0\u05EA\u05D4 \u05DE\u05D7\u05E4\u05E9 \u05D0\u05EA");
+						panel.add(label);
 					}
 				}
+			}
+			{
+				JPanel panelTestGrade = new JPanel();
+				panelTestGrade.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
+				panelFieldsAndButtons.add(panelTestGrade);
+				panelTestGrade.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 				{
-					JPanel panel_1 = new JPanel();
-					panel.add(panel_1);
+					grade = new JSpinner(new SpinnerNumberModel(0,0,100,1));
+					panelTestGrade.add(grade);
+				}
+				{
+					JLabel lblGrade = new JLabel("\u05E6\u05D9\u05D5\u05DF:");
+					panelTestGrade.add(lblGrade);
+				}
+			}
+			{
+				JPanel panelButtons = new JPanel();
+				panelButtons.setBorder(new EtchedBorder(EtchedBorder.RAISED, null, null));
+				panelFieldsAndButtons.add(panelButtons);
+				panelButtons.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+				{
 					JButton button = new JButton("\u05E0\u05E7\u05D4 \u05E9\u05D3\u05D5\u05EA");
-					panel_1.add(button);
 					button.addActionListener(new ActionListener() {
 						@Override
 						public void actionPerformed(ActionEvent arg0) {
@@ -256,45 +239,36 @@ public class AddGradesToTestJDialog extends JDialog {
 							grade.setValue(0);
 						}
 					});
-					{
-						JButton btnAddToList = new JButton("\u05D4\u05D5\u05E1\u05E3 \u05DC\u05E8\u05E9\u05D9\u05DE\u05D4");
-						panel_1.add(btnAddToList);
-						btnAddToList.addActionListener(new ActionListener() {
-							@Override
-							public void actionPerformed(ActionEvent arg0) {
-								String name = textFieldStudentName.getText();
-								if(!IsTextInCombobox(name)){
-									JOptionPane.showMessageDialog(null, "אין תלמיד כזה");
-									return;
-								}
-								int Intgrade = (Integer)grade.getValue();
-								try {
-										int id = Grades.getStudentID(name);
-										
-										Examinee ex = new Examinee(name, Intgrade);
-										((ExmainesDefaultListModel)allExaminees.getModel()).
-											addElement(ex);
-										ex.setID(id);
-								} catch (SQLException e) {
-									JOptionPane.showMessageDialog(null, e.getMessage());
-									return;
-								}
-									
-									
-								
+					panelButtons.add(button);
+				}
+				{
+					JButton btnAddToList = new JButton("\u05D4\u05D5\u05E1\u05E3 \u05DC\u05E8\u05E9\u05D9\u05DE\u05D4");
+					btnAddToList.addActionListener(new ActionListener() {
+						@Override
+						public void actionPerformed(ActionEvent arg0) {
+							String name = textFieldStudentName.getText();
+							if(!IsTextInCombobox(name)){
+								JOptionPane.showMessageDialog(null, "אין תלמיד כזה");
+								return;
 							}
-						});
-					}
-				}
-			}
-			{
-				{
-					{
-					}
-				}
-			}
-			{
-				{
+							int Intgrade = (Integer)grade.getValue();
+							try {
+									int id = Grades.getStudentID(name);
+									
+									Examinee ex = new Examinee(name, Intgrade);
+									((ExmainesDefaultListModel)allExaminees.getModel()).
+										addElement(ex);
+									ex.setID(id);
+							} catch (SQLException e) {
+								JOptionPane.showMessageDialog(null, e.getMessage());
+								return;
+							}
+								
+								
+							
+						}
+					});
+					panelButtons.add(btnAddToList);
 				}
 			}
 		}

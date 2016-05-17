@@ -1,4 +1,4 @@
-package mvc_tests;
+package mv_TestsManagingDialog;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
@@ -18,9 +18,10 @@ import javax.swing.JLabel;
 import java.awt.GridLayout;
 import javax.swing.JComboBox;
 import javax.swing.JFormattedTextField;
-import javax.swing.JTextField;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerDateModel;
+import javax.swing.SwingConstants;
+
 import java.util.Date;
 import java.util.Calendar;
 import java.awt.event.ActionListener;
@@ -28,13 +29,16 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.awt.event.ActionEvent;
 import javax.swing.DefaultComboBoxModel;
-import javax.swing.DefaultListModel;
 
 public class ViewTestRecord extends View {
 	
+	//finals:
 	private static final String RECORD_NAME = "îáçï";
 	
-	//All components:
+	//Objects:
+	private int testID;
+	
+	//components:
 	private final JPanel contentPanel = new JPanel();
 	private JComboBox<String> comboBox_categories;
 	private JFormattedTextField textField_testName;
@@ -93,7 +97,8 @@ public class ViewTestRecord extends View {
 				panelFields.add(panelFieldName);
 				{
 					try {
-						textField_testName = new JFormattedTextField(new RegexFormatter("^[a-zA-Zà-ú']+$"));
+						textField_testName = new JFormattedTextField(new RegexFormatter("^[a-zA-Zà-ú' ]+$"));
+						textField_testName.setHorizontalAlignment(SwingConstants.RIGHT);
 					} catch (ParseException e) {
 						e.printStackTrace();
 					}
@@ -110,9 +115,10 @@ public class ViewTestRecord extends View {
 				panelFields.add(panelFieldDate);
 				{
 					spinner_testDate = new JSpinner();
+					Date date = new Date();
 					SpinnerDateModel model = 
-							new SpinnerDateModel(Calendar.getInstance().getTime()
-									,null,new Date(),Calendar.DAY_OF_YEAR);
+							new SpinnerDateModel(date,null,date,Calendar.DAY_OF_MONTH);
+					
 					spinner_testDate.setModel(model);
 					spinner_testDate.setEditor(new JSpinner.DateEditor(spinner_testDate,DATE_FORMAT));
 					
@@ -136,6 +142,7 @@ public class ViewTestRecord extends View {
 			{
 				JButton cancelButton = new JButton("Cancel");
 				cancelButton.addActionListener(new ActionListener() {
+					@Override
 					public void actionPerformed(ActionEvent e) {
 						dispose();
 					}
@@ -143,6 +150,7 @@ public class ViewTestRecord extends View {
 				{
 					JButton btnClear = new JButton("Clear");
 					btnClear.addActionListener(new ActionListener() {
+						@Override
 						public void actionPerformed(ActionEvent e) {
 							comboBox_categories.setSelectedIndex(0);
 							textField_testName.setText("");
@@ -162,7 +170,7 @@ public class ViewTestRecord extends View {
 	public TableStructure createStructureFromFields() {
 		//TODO: Validate fields correction
 		Test test = new Test();
-		
+		test.setTestid(testID);
 		test.setCategory((String)comboBox_categories.getSelectedItem());
 		test.setName(textField_testName.getText());
 		
@@ -175,10 +183,11 @@ public class ViewTestRecord extends View {
 	}
 
 	@Override
-	public void putStructureIntoFields(TableStructure structure) throws InvalidStructure {
-		if(!(structure instanceof Test))
+	public void putStructureIntoFields(TableStructure oldStructure) throws InvalidStructure {
+		if(!(oldStructure instanceof Test))
 			throw new InvalidStructure("Given structure is not a Test");
-		Test test = (Test) structure;
+		Test test = (Test) oldStructure;
+		this.testID = test.getTestid();
 		textField_testName.setText(test.getName());
 		comboBox_categories.setSelectedItem(test.getCategory());
 		try {
@@ -193,6 +202,13 @@ public class ViewTestRecord extends View {
 	public void setCategories(String[] categories){
 		if (categories!=null)
 			comboBox_categories.setModel(new DefaultComboBoxModel<String>(categories));
+	}
+
+	@Override
+	public boolean fieldsAreNotEmpty() {
+		if(textField_testName.getText().equals(""))
+			return false;
+		return true;
 	}
 
 }

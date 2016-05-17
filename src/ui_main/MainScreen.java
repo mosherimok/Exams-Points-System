@@ -1,47 +1,31 @@
 package ui_main;
 
-import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.SpringLayout.Constraints;
-
 import java.awt.BorderLayout;
 import java.awt.Component;
 
 import javax.swing.JLabel;
 import javax.swing.JButton;
-import javax.swing.JComponent;
-
-import java.awt.GridBagLayout;
-import java.awt.GridBagConstraints;
-import java.awt.Insets;
 import java.awt.CardLayout;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.CompoundBorder;
-import javax.swing.border.LineBorder;
-
-import database.DatabaseConnection;
-import ui_components.AbstractJPanel;
-import ui_menuPanels.StudentsDetailsPnl;
-import ui_menuPanels.TestsCategoriesPnl;
-import ui_menuPanels.TestsJPanel;
 
 import java.awt.Color;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 import java.awt.event.ActionEvent;
-import java.awt.FlowLayout;
-import java.awt.GridLayout;
 import javax.swing.Box;
-import javax.swing.SwingConstants;
-import java.awt.Dimension;
 import javax.swing.BoxLayout;
 import javax.swing.border.TitledBorder;
+
+import mv_TestCategoriesManagingDialog.ViewTestCategoryRecord;
+import view_menu_panels.ViewStudentsMenuPanel;
+import view_menu_panels.ViewTestsCategoriesPanel;
+import view_menu_panels.ViewTestsMenuPanel;
 
 public class MainScreen implements ActionListener{
 
@@ -97,19 +81,7 @@ public class MainScreen implements ActionListener{
 		JButton btnDoneTests = new JButton("\u05DE\u05D1\u05D7\u05E0\u05D9\u05DD \u05E9\u05E0\u05E2\u05E9\u05D5");
 		btnDoneTests.setActionCommand(DONE_TESTS_PNL);
 		btnDoneTests.addActionListener(this);
-		/*btnDoneTests.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				if(currentView!=null){
-					pnlCardLayout.remove(currentView);
-					currentView.removeAll();
-				}
-				currentView = new TestsJPanel();
-				pnlCardLayout.add(currentView,DONE_TESTS_PNL);
-				((CardLayout)pnlCardLayout.getLayout()).show(pnlCardLayout, DONE_TESTS_PNL);
-			}
-		});*/
+
 		btnDoneTests.setAlignmentX(Component.CENTER_ALIGNMENT);
 		pnlMenu.add(btnDoneTests);
 		
@@ -119,19 +91,7 @@ public class MainScreen implements ActionListener{
 		JButton btnTestsCategories = new JButton("\u05E1\u05D5\u05D2\u05D9 \u05DE\u05D1\u05D7\u05E0\u05D9\u05DD");
 		btnTestsCategories.setActionCommand(TESTS_CATEGORIES);
 		btnTestsCategories.addActionListener(this);
-		/*btnTestsCategories.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				if(currentView!=null){
-					pnlCardLayout.remove(currentView);
-					currentView.removeAll();
-				}
-				currentView = new TestsCategoriesPnl();
-				pnlCardLayout.add(currentView,TESTS_CATEGORIES);
-				((CardLayout)pnlCardLayout.getLayout()).show(pnlCardLayout, TESTS_CATEGORIES);
-			}
-		});*/
+
 		btnTestsCategories.setAlignmentX(Component.CENTER_ALIGNMENT);
 		pnlMenu.add(btnTestsCategories);
 		
@@ -139,30 +99,15 @@ public class MainScreen implements ActionListener{
 		pnlMenu.add(verticalStrut_3);
 		
 		JButton btnNewButton = new JButton("\u05E8\u05E2\u05E0\u05DF \u05DE\u05D9\u05D3\u05E2");
+		btnNewButton.setVisible(false);
 		btnNewButton.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				((AbstractJPanel)currentView).refreshDataFromDB();
+				
 			}
 		});
 		btnNewButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-		pnlMenu.add(btnNewButton);
-		
-		
-		
-		/*btnStdsDetails.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				if(currentView!=null){
-					pnlCardLayout.remove(currentView);
-					currentView.removeAll();
-				}
-				currentView = new StudentsDetailsPnl();
-				pnlCardLayout.add(currentView,STUDENTS_PNL);
-				((CardLayout)pnlCardLayout.getLayout()).show(pnlCardLayout, STUDENTS_PNL);
-			}
-		});*/
-		
-		
-		
+		pnlMenu.add(btnNewButton);	
 		
 	}
 	
@@ -172,9 +117,7 @@ public class MainScreen implements ActionListener{
 		
 		// Set all panels to be in it.
 		pnlCardLayout.add(new JPanel(),BLANK_PNL);
-		//pnlCardLayout.add(new StudentsDetailsPnl(),STUDENTS_PNL);
-		//pnlCardLayout.add(new TestsCategoriesPnl(),TESTS_CATEGORIES);
-		//pnlCardLayout.add(new TestsJPanel(),DONE_TESTS_PNL);
+
 		
 		frame.getContentPane().add(pnlCardLayout, BorderLayout.CENTER);
 	}
@@ -208,16 +151,17 @@ public class MainScreen implements ActionListener{
 		frame.setVisible(visibility);
 	}
 	
+	@Override
 	public void actionPerformed(ActionEvent e){
 		switch(e.getActionCommand()){
 		case STUDENTS_PNL:
-			switchView(new StudentsDetailsPnl(),e.getActionCommand());
+			switchView(new ViewStudentsMenuPanel(),e.getActionCommand());
 			break;
 		case DONE_TESTS_PNL:
-			switchView(new TestsJPanel(),e.getActionCommand());
+			switchView(new ViewTestsMenuPanel(),e.getActionCommand());
 			break;
 		case TESTS_CATEGORIES:
-			switchView(new TestsCategoriesPnl(),e.getActionCommand());
+			switchView(new ViewTestsCategoriesPanel(),e.getActionCommand());
 			break;
 		}
 	}
@@ -228,10 +172,6 @@ public class MainScreen implements ActionListener{
 		currentView=view;
 		pnlCardLayout.add(currentView, name);
 		((CardLayout)pnlCardLayout.getLayout()).show(pnlCardLayout,name);
-	}
-	
-	public static AbstractJPanel getCurrentViewPanel(){
-		return (AbstractJPanel) currentView;
 	}
 	
 }

@@ -4,17 +4,17 @@ import java.sql.SQLException;
 
 import database.DatabaseActions;
 import exceptions.InvalidStructure;
+import mv_StudentManagingDialog.ModelAddStudent;
+import mv_StudentManagingDialog.ModelModifyStudent;
+import mv_StudentManagingDialog.ViewStudentRecord;
+import mv_TestCategoriesManagingDialog.ModelAddTestCategory;
+import mv_TestCategoriesManagingDialog.ModelModifyTestCategory;
+import mv_TestCategoriesManagingDialog.ViewTestCategoryRecord;
+import mv_TestsManagingDialog.ModelAddTest;
+import mv_TestsManagingDialog.ModelModifyTest;
+import mv_TestsManagingDialog.ViewTestRecord;
 import mvc_dialogs.Model;
 import mvc_dialogs.View;
-import mvc_students.ModelAddStudent;
-import mvc_students.ModelModifyStudent;
-import mvc_students.ViewStudentRecord;
-import mvc_tests.ModelAddTest;
-import mvc_tests.ModelModifyTest;
-import mvc_tests.ViewTestRecord;
-import mvc_testsCategories.ModelAddTestCategory;
-import mvc_testsCategories.ModelModifyTestCategory;
-import mvc_testsCategories.ViewTestCategoryRecord;
 import tablesStructures.Student;
 import tablesStructures.TableStructure;
 import tablesStructures.Test;
@@ -69,19 +69,23 @@ public class MV_Factory {
 		switch(viewType){
 		case Students:
 				if(!(oldStructure instanceof Student))
-					throw new InvalidStructure("Student expected!");
+					throw new InvalidStructure("Student structure expected!");
 			return new ModelModifyStudent((Student)oldStructure);
 		case Tests:
 				if(!(oldStructure instanceof Test))
-					throw new InvalidStructure("Test expected!");
+					throw new InvalidStructure("Test structure expected!");
 			return new ModelModifyTest((Test)oldStructure);
 		case TestsCategories:
 				if(!(oldStructure instanceof TestCategory))
-					throw new InvalidStructure("TestCategory expected!");
+					throw new InvalidStructure("TestCategory structure expected!");
 			return new ModelModifyTestCategory((TestCategory)oldStructure);
 		default:
 			return null;
 		}
+	}
+	
+	public Views getViewType(){
+		return viewType;
 	}
 
 }

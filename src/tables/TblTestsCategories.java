@@ -1,7 +1,5 @@
 package tables;
 
-import tablesStructures.TableStructure;
-import tablesStructures.Test;
 import tablesStructures.TestCategory;
 
 public class TblTestsCategories extends Table{

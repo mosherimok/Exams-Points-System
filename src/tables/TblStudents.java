@@ -1,8 +1,6 @@
 package tables;
 
-import tablesStructures.DoneTest;
 import tablesStructures.Student;
-import tablesStructures.TableStructure;
 
 public class TblStudents extends Table{
 	
