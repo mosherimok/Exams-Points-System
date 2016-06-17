@@ -18,8 +18,6 @@ public class Student extends TableStructure{
 		initFromArray(values);
 	}
 	
-	
-	
 	public Student(Integer id, String firstName, String lastName, Short receptionYear, Integer points) {
 		setId(id);
 		setFirstName(firstName);

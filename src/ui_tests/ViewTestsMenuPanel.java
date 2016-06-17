@@ -10,12 +10,12 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.border.TitledBorder;
-import actions.AddGradesActions;
-import actions.MV_Factory.Views;
+
 import components_utility.MenuPanelView;
-import components_utility.PanelManagingRecord;
 import components_utility.ResultSetDefaultTableModel;
 import tables.TblTests;
+import ui_records_management.PanelManagingRecord;
+import ui_records_management.ModelViewFactory.Views;
 import ui_searchRecord.ViewSearchRecord;
 
 import javax.swing.UIManager;
@@ -82,7 +82,7 @@ public class ViewTestsMenuPanel extends MenuPanelView {
 		panelTestActions.add(verticalStrut);
 		
 		addExaminees = new JButton("\u05D4\u05D5\u05E1\u05E4\u05EA \u05E6\u05D9\u05D5\u05E0\u05D9\u05DD \u05DC\u05DE\u05D1\u05D7\u05DF \u05D6\u05D4");
-		addExaminees.addActionListener(AddGradesActions.getAddGradesAction(jtable));
+		addExaminees.addActionListener(model.getAddGradesAction());
 		addExaminees.setEnabled(false);
 		addExaminees.setAlignmentX(Component.CENTER_ALIGNMENT);
 		panelTestActions.add(addExaminees);

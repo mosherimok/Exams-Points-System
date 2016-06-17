@@ -3,6 +3,11 @@ package ui_donetests_components;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import javax.swing.Action;
+import javax.swing.DefaultListCellRenderer;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
@@ -11,6 +16,7 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
+import components_done_tests.DoneTestUtilities;
 import components_utility.CustomizedJTable;
 import database.Database;
 
@@ -25,11 +31,12 @@ public class JFrameDisplayAllExaminees extends JFrame {
 	
 	private final JPanel contentPanel = new JPanel();
 	private CustomizedJTable jtable;
+	private ArrayList<Integer> grades = new ArrayList<>();
 
 	/**
 	 * Launch the application.
 	 */
-	public static void main(String[] args) {
+	/*public static void main(String[] args) {
 		try {
 			JFrameDisplayAllExaminees dialog = new JFrameDisplayAllExaminees(2);
 			dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
@@ -37,7 +44,7 @@ public class JFrameDisplayAllExaminees extends JFrame {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	}
+	}*/
 
 	/**
 	 * Create the dialog.
@@ -73,10 +80,23 @@ public class JFrameDisplayAllExaminees extends JFrame {
 			buttonPane.setLayout(new FlowLayout(FlowLayout.CENTER));
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
 			{
-				JButton okButton = new JButton("OK");
+				JButton okButton = new JButton("שמור שינויים");
 				okButton.addActionListener(new ActionListener() {
 					@Override
 					public void actionPerformed(ActionEvent e) {
+						for(int i=0;i<grades.size();i++){
+							int grade = Integer.parseInt(jtable.getValueAt(i, 3).toString());
+							System.out.println("jtable grade: " + grade);
+							if(grades.get(i)!=grade){ 
+								int studentID = (int) jtable.getValueAt(i, 0);
+								try {
+									DoneTestUtilities.changeDoneTestGrade(studentID, testID, grade);
+									System.out.println("grade changed to " + grade);
+								} catch (SQLException e1) {
+									e1.printStackTrace();
+								}
+							}
+						}
 						dispose();
 					}
 				});
@@ -95,30 +115,36 @@ public class JFrameDisplayAllExaminees extends JFrame {
 		try {
 			Object [][] data = Database.
 					executeQuery(script);
-			String[] columnsIdentifiers = {"ת\"ז תלמיד","שם פרטי","שם משפחה","ציון","נקודות"};
+			String[] columnsIdentifiers = {"ת\"ז תלמיד","שם פרטי","שם משפחה","ציון","ניקוד מתאים"};
 			
 			if(data.length==0){
 				JOptionPane.showMessageDialog(null, "אין נבחנים עבור מבחן זה");
 				return false;
 			}
 			
-			jtable = new CustomizedJTable();
+			jtable = new CustomizedJTable(){
+				
+				@Override
+				public boolean isCellEditable(int row, int column) {
+					if(column==3)
+						return true;
+					return false;
+				}
+				
+			};
+			
+			
 			jtable.setDefaultTableModel(new DefaultTableModel(data,columnsIdentifiers));
+			
+			for (Object[] row : data){
+				grades.add((int)row[3]);
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return false;
 		}
 		return true;
-		
-		/*jtable.setCellSelectionEnabled(false);
-//		jtable.setRowHeight(20);
-		jtable.setDefaultRenderer(String.class, new TextAreaRenderer());
 
-		Font font = new Font("Ariel", Font.PLAIN, 16);
-		jtable.setFont(font);
-		jtable.getTableHeader().setFont(font);*/
-		
-		
 	}
 
 }

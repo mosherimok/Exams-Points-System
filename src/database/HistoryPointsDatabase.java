@@ -25,6 +25,7 @@ public class HistoryPointsDatabase {
 				e.printStackTrace();
 				throw new SQLException(e.getMessage());
 			}
+			//REMINDER: when not in dubugging change the path to the history points archive database.
 			connection = DriverManager.getConnection(ConnectionProperties.DATABASE_POINTS_HISTORY_ADRESS,ConnectionProperties.points_history_properties);
 		}
 	}
@@ -39,7 +40,7 @@ public class HistoryPointsDatabase {
 	public static Object[][] getStudentHistoryByID(int id) throws SQLException{
 		initConnection();
 		
-		String script = "SELECT Date,Points,Reason FROM PointsHistory WHERE StudentID = ?";
+		String script = "SELECT Date,Points,Reason FROM PointsHistory WHERE StudentID = ? order by date";
 		try(PreparedStatement stmt = connection.prepareStatement(script)){
 			stmt.setInt(1, id);
 			ArrayList<Object[]> data = new ArrayList<>();
@@ -66,16 +67,18 @@ public class HistoryPointsDatabase {
 		}
 	}
 	
-	public static void insertRecord(int id,int points,String date,String reason) throws SQLException{
+	public static void insertRecord(int studentID,String date,int points,String reason) throws SQLException{
 		initConnection();
 		
-		String script = "INSERT INTO HistoryPoints Values(?,?,?,?)";
+		String script = "INSERT INTO PointsHistory Values(?,?,?,?)";
 		try(PreparedStatement stmt = connection.prepareStatement(script)){
-			stmt.setInt(1, id);
-			stmt.setInt(2, points);
-			stmt.setString(3, date);
+			System.out.println(String.format("id = %d points = %d date = %s reason = %s",studentID,points,
+					date,reason));
+			stmt.setInt(1, studentID);
+			stmt.setString(2, date);
+			stmt.setInt(3, points);
 			stmt.setString(4, reason);
-			stmt.executeQuery();
+			stmt.executeUpdate();
 		}
 		finally{
 			if(closeWhenFunctionDone)
@@ -83,14 +86,14 @@ public class HistoryPointsDatabase {
 		}
 	}
 	
-	public static void insertRecord(int id,int points,String date) throws SQLException{
+	public static void insertRecord(int studentID,String date, int points) throws SQLException{
 		initConnection();
 
 		String script = "INSERT INTO HistoryPoints(StudentID,Date,Points) Values(?,?,?)";
 		try(PreparedStatement stmt = connection.prepareStatement(script)){
-			stmt.setInt(1, id);
-			stmt.setInt(2, points);
-			stmt.setString(3, date);
+			stmt.setInt(1, studentID);
+			stmt.setString(2, date);
+			stmt.setInt(3, points);
 			stmt.executeQuery();
 		}
 		finally{

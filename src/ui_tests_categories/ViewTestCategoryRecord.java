@@ -14,7 +14,6 @@ import javax.swing.JSpinner;
 import javax.swing.border.EtchedBorder;
 
 import components_utility.HebrewJFormattedTextfield;
-import components_utility.LimitedDocument;
 import components_utility.RegexFormatter;
 import mvc_managing_records.View;
 
@@ -64,7 +63,6 @@ public class ViewTestCategoryRecord extends View {
 				{
 					try {
 						textFieldTestType = new HebrewJFormattedTextfield(new RegexFormatter(TEST_TYPE_PATTERN));
-						textFieldTestType.setDocument(new LimitedDocument(20));
 					} catch (ParseException e) {
 						e.printStackTrace();
 					}

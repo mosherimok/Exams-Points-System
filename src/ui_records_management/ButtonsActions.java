@@ -1,11 +1,11 @@
-package actions;
+package ui_records_management;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
 
 import javax.swing.JOptionPane;
-import actions.MV_Factory.Views;
+
 import components_utility.CustomizedJTable;
 import components_utility.DefaultSqlTableModel;
 import database.Condition;
@@ -16,18 +16,19 @@ import exceptions.InvalidStructure;
 import mvc_managing_records.Controller;
 import mvc_managing_records.Model;
 import tablesStructures.TableStructure;
+import ui_records_management.ModelViewFactory.Views;
 
 public class ButtonsActions {
 
 	protected CustomizedJTable jtable;
-	private MV_Factory MVfactory;
+	private ModelViewFactory MVfactory;
 	/**
 	 * Add and Modify dialogs View (Mvc)
 	 */
 	
 	public ButtonsActions(CustomizedJTable jtable,Views view){
 		this.jtable = jtable;
-		this.MVfactory = new MV_Factory(view);
+		this.MVfactory = new ModelViewFactory(view);
 	}
 	
 	
@@ -76,12 +77,10 @@ public class ButtonsActions {
 				
 				String script = DatabaseUpdatingScripts.deleteFrom(MVfactory.getViewType().toString(),
 						condition);
-				try {
-					Database.executeUpdate(script);
-					jtable.updateJTableData();
-				} catch (SQLException e1) {
-					e1.printStackTrace();
-				}
+
+				Database.executeUpdate(script);
+				jtable.updateJTableData();
+
 			}
 		};
 	}

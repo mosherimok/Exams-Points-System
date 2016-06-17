@@ -1,7 +1,11 @@
 package ui_students;
 
+import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.util.Date;
 
+import database.HistoryPointsDatabase;
 import exceptions.FieldsValuesException;
 import exceptions.InvalidStructure;
 import mvc_managing_records.Model;
@@ -12,6 +16,7 @@ import tablesStructures.TableStructure;
 public class ModelDialogStudent extends Model{
 	
 	private ViewDialogStudent stdview;
+	private int oldPoints;
 	
 	public ModelDialogStudent(View view) {
 		super(view);
@@ -44,6 +49,8 @@ public class ModelDialogStudent extends Model{
 		stdview.rec_year.setValue(student.getReceptionYear());
 		
 		stdview.points.setValue(student.getPoints());
+		
+		oldPoints = student.getPoints();
 	}
 
 	@Override
@@ -77,6 +84,22 @@ public class ModelDialogStudent extends Model{
 		stdview.textField_f_name.setText("");
 		stdview.rec_year.setValue(LocalDate.now().getYear()-30);
 		stdview.points.setValue(0);		
+	}
+	
+	@Override
+	public void insertToDatabase() throws SQLException {
+		super.insertToDatabase();
+		HistoryPointsDatabase.insertRecord(Integer.parseInt(stdview.id.getValue().toString().replace("-","")), 
+				new SimpleDateFormat("dd-MM-yyyy").format(new Date()),0,"התלמיד נוסף למערכת");
+	}
+	
+	@Override
+	public void updateDatabase() throws SQLException {
+		super.updateDatabase();
+		int currentPoints = ((Student)structure).getPoints();
+		if(currentPoints!=oldPoints)
+			HistoryPointsDatabase.insertRecord(Integer.parseInt(stdview.id.getValue().toString().replace("-","")), 
+					new SimpleDateFormat("dd-MM-yyyy").format(new Date()),currentPoints,"מספר הנקודות שונה ידנית");
 	}
 
 	

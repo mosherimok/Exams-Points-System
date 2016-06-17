@@ -4,11 +4,12 @@ import java.awt.BorderLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import actions.MV_Factory.Views;
+
 import components_utility.MenuPanelView;
-import components_utility.PanelManagingRecord;
 import components_utility.ResultSetDefaultTableModel;
 import tables.TblTestsCategories;
+import ui_records_management.PanelManagingRecord;
+import ui_records_management.ModelViewFactory.Views;
 
 public class ViewTestsCategoriesPanel extends MenuPanelView {
 

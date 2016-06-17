@@ -62,8 +62,8 @@ public abstract class Model {
 	public void insertToDatabase() throws SQLException {
 		if(structure==null)
 			throw new NullPointerException("Structure is null!");
-		String script = DatabaseUpdatingScripts.insertInto(structure);
-		Database.executeUpdate(script);
+		String script = DatabaseUpdatingScripts.insertIntoPreparedStatementScript(structure);
+		Database.executeSinglePreparedStatement(script, structure.getValues());
 	}
 	
 	public abstract void clearFields();

@@ -12,15 +12,11 @@ public class DoneTest extends TableStructure{
 	
 	public DoneTest(){}
 		
-	
-	
 	public DoneTest(Integer studentid, Integer testid, Integer grade) {
 		setStudentid(studentid);
 		setTestid(testid);
 		setGrade(grade);
 	}
-
-
 
 	public DoneTest(Object[] values){
 		initFromArray(values);

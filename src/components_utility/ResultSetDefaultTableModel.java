@@ -15,8 +15,8 @@ public class ResultSetDefaultTableModel extends DefaultSqlTableModel{
 	
 	public ResultSetDefaultTableModel(Table table) {
 		this.sqlTable=table;
-		refreshData();
 		initColumnsLabels();
+		refreshData();
 	}
 	
 	@Override

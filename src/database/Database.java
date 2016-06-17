@@ -9,6 +9,8 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import javax.swing.JOptionPane;
+
 public class Database {
 
 	private static Connection connection;
@@ -67,13 +69,23 @@ public class Database {
 		}
 	}
 	
-	public static int executeUpdate(String sql) throws SQLException{
+	
+	
+	public static int executeUpdate(String sql){
 		createWriteableConnection();
 		
 		synchronized(connection){
 			
 			try(Statement statement = connection.createStatement()){
 				return statement.executeUpdate(sql);
+			}
+			catch(SQLException ex){
+				if(ex.getMessage().equals("UNIQUE constraint failed: students.ID")){
+					System.err.println("This student is already exists");
+					JOptionPane.showMessageDialog(null, "קיים כבר תלמיד עם ת\"ז כזה.\n כדי להוסיף אותו מחק קודם את הקיים");
+				}
+				ex.printStackTrace();
+				return 0;
 			}
 			finally{
 				if(closeConnectionWhenDoneOperation)
@@ -83,9 +95,9 @@ public class Database {
 		
 	}
 	
-	public static int executeSinglePreparedStatement(String sql,ArrayList<Object> values) throws SQLException{
+	public static int executeSinglePreparedStatement(String preparedSql,ArrayList<Object> values) throws SQLException{
 		synchronized (connection) {
-			return executeSinglePreparedStatement(sql, values.toArray());
+			return executeSinglePreparedStatement(preparedSql, values.toArray());
 		}
 	}
 	

@@ -13,12 +13,12 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.MatteBorder;
 
-import actions.MV_Factory.Views;
 import components_utility.CustomizedJTable;
-import components_utility.PanelManagingRecord;
 import pointsHistory.JButtonPointsHistory;
 import tables.Table;
 import ui_main.MainScreen;
+import ui_records_management.PanelManagingRecord;
+import ui_records_management.ModelViewFactory.Views;
 
 public class ViewFoundedRecords extends JFrame{
 	

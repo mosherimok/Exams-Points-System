@@ -3,10 +3,12 @@ package ui_tests;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import ui_donetests_components.JFrameAddGradesToTest;
 import ui_donetests_components.JFrameDisplayAllExaminees;
 
 public class ModelMpTests {
@@ -41,6 +43,18 @@ public class ModelMpTests {
 				new JFrameDisplayAllExaminees(testid);
 			}
 		});
+	}
+	
+	public ActionListener getAddGradesAction(){
+		return new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JTable table = view.jtable;
+				int testid = (int) table.getValueAt(table.getSelectedRow(), 0);
+				new JFrameAddGradesToTest(testid);
+			}
+		};
 	}
 
 }

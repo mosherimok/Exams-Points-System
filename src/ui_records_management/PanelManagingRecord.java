@@ -1,4 +1,4 @@
-package components_utility;
+package ui_records_management;
 
 import javax.swing.JPanel;
 import javax.swing.JTable;
@@ -6,8 +6,8 @@ import javax.swing.SwingConstants;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import actions.ButtonsActions;
-import actions.MV_Factory.Views;
+import components_utility.CustomizedJTable;
+import ui_records_management.ModelViewFactory.Views;
 
 import java.awt.FlowLayout;
 import java.util.ArrayList;
@@ -90,10 +90,10 @@ public class PanelManagingRecord extends JPanel {
 				boolean isSelectionEmpty = jtable.getSelectionModel().isSelectionEmpty();
 				buttonDeleteRecord.setEnabled(!isSelectionEmpty);
 				buttonModifyRecord.setEnabled(!isSelectionEmpty);
-				for(JButton b:userButtons){
-					if(!b.isEnabled())
+				if (userButtons!=null)
+					for(JButton b:userButtons){
 						b.setEnabled(!isSelectionEmpty);
-				}
+					}
 			}
 		});
 	}

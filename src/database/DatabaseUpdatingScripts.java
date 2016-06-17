@@ -1,20 +1,31 @@
 package database;
 
+import java.sql.PreparedStatement;
+
+import tables.Table;
 import tablesStructures.TableStructure;
 
 public class DatabaseUpdatingScripts {
 
-	public static String insertInto(TableStructure structure){
-		String script = "INSERT INTO " + structure.getTableName()+"(";
-		for(String col: structure.getTableObject().getColumnsIdentifiers()){
-			script+=col+",";
+	public static String insertIntoPreparedStatementScript(TableStructure structure){
+		String script = "INSERT INTO " + structure.getTableName() + "(";
+		Table table = structure.getTableObject();
+		
+		for(int i = 0;i<table.getAllColumnsIdentifiers().length;i++){
+			script+= table.getAllColumnsIdentifiers()[i];
+			if (i!=table.getAllColumnsIdentifiers().length-1)
+				script+=',';
 		}
-		script = script.substring(0,script.length()-1)+") Values(";
-		for(Object obj : structure){
-			if(obj!=null)
-				script+=String.format("'%s',", obj.toString());
+		
+		script += ") VALUES(";
+		for (int i = 0; i < structure.getValues().length; i++) {
+			script+="?";
+			if (i!=structure.getValues().length-1)
+				script+=",";
 		}
-		script = script.substring(0,script.length()-1)+")"; // -2 for the last ',' and white-space.
+		
+		script+= ")";
+		
 		return script;
 	}
 	

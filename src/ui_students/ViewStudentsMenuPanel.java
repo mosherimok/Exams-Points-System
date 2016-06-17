@@ -7,11 +7,11 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.SpinnerNumberModel;
 
-import actions.MV_Factory.Views;
 import components_utility.MenuPanelView;
-import components_utility.PanelManagingRecord;
 import pointsHistory.JButtonPointsHistory;
 import tables.TblStudents;
+import ui_records_management.PanelManagingRecord;
+import ui_records_management.ModelViewFactory.Views;
 import ui_searchRecord.ViewSearchRecord;
 
 import javax.swing.border.EtchedBorder;

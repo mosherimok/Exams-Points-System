@@ -11,7 +11,6 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 
 import components_utility.HebrewJFormattedTextfield;
-import components_utility.LimitedDocument;
 import components_utility.RegexFormatter;
 import components_utility.RegexMaskFormatter;
 import mvc_managing_records.View;
@@ -109,7 +108,6 @@ public class ViewDialogStudent extends View{
 				{
 					try {
 						textField_l_name = new HebrewJFormattedTextfield(new RegexFormatter(FL_PATTERN));
-						textField_l_name.setDocument(new LimitedDocument(25));
 					} catch (ParseException e) {
 						e.printStackTrace();
 					}
@@ -125,7 +123,6 @@ public class ViewDialogStudent extends View{
 				
 					try {
 						textField_f_name = new HebrewJFormattedTextfield(new RegexFormatter(FL_PATTERN));
-						textField_f_name.setDocument(new LimitedDocument(25));
 					} catch (ParseException e) {
 						e.printStackTrace();
 					}

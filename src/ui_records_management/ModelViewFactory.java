@@ -1,4 +1,4 @@
-package actions;
+package ui_records_management;
 
 import java.sql.SQLException;
 
@@ -18,7 +18,7 @@ import ui_tests.ViewTestRecord;
 import ui_tests_categories.ModelTestCategory;
 import ui_tests_categories.ViewTestCategoryRecord;
 
-public class MV_Factory {
+public class ModelViewFactory {
 	
 	public static enum Views{
 		Students,Tests,TestsCategories
@@ -26,7 +26,7 @@ public class MV_Factory {
 	
 	private Views viewType;
 	
-	public MV_Factory(Views view){
+	public ModelViewFactory(Views view){
 		this.viewType = view;
 	}
 	

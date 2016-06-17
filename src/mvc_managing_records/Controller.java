@@ -55,11 +55,29 @@ public class Controller{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try{
-					model.setStructure(model.createStructureFromFields());
-					if(model.getType()==Types.MODIFY)
-						model.updateDatabase();
-					else
+					if(model.getType()==Types.MODIFY){
+						// Checking whether there is a change in the record so that the DB needs  to be updated.
+						Object[] oldValues = model.getStructure().getValues();
+						model.setStructure(model.createStructureFromFields());
+						Object[] newValues = model.getStructure().getValues();
+						boolean needToUpdate = false;
+						for (int i = 0; i < oldValues.length; i++) {
+							if(!oldValues[i].toString().equals(newValues[i].toString())){
+								needToUpdate = true;
+								break;
+							}
+						}
+						if(needToUpdate){
+							System.out.println("Need to update");
+							model.updateDatabase();
+							jtable.updateJTableData();
+						}
+					}
+					else{
+						model.setStructure(model.createStructureFromFields());
 						model.insertToDatabase();
+						jtable.updateJTableData();
+					}
 				}catch(FieldsValuesException ex){
 					ex.printStackTrace();
 					JOptionPane.showMessageDialog(null, "בדוק שכל השדות תקינים");
@@ -67,6 +85,7 @@ public class Controller{
 					e1.printStackTrace();
 					JOptionPane.showMessageDialog(null, "לא היה ניתן להוסיף את רשומה זו");
 				}
+				
 				
 				view.dispose();
 			}
@@ -84,12 +103,8 @@ public class Controller{
 		});
 	}
 	
-	/*public boolean isNeedToUpdateJTable(){
-		return needToUpdateJTable;
-	}
-	*/
 	
-	public TableStructure getNewTableStructure(){
+	public TableStructure getTheNewTableStructure(){
 		return model.structure;
 	}
 	

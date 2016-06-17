@@ -44,17 +44,16 @@ public class PointsTest {
 		test = new tablesStructures.Test(TEST_NAME,TEST_CATEGORY,TEST_DATE);
 		
 		try {
-			Database.executeUpdate(DatabaseUpdatingScripts.insertInto(student));
+			String script = DatabaseUpdatingScripts.insertIntoPreparedStatementScript(student);
+			Database.executeSinglePreparedStatement(script,student.getValues());
+			
+			script = DatabaseUpdatingScripts.insertIntoPreparedStatementScript(test);
+			Database.executeSinglePreparedStatement(script,test.getValues());
 		} catch (SQLException e1) {
 			e1.printStackTrace();
-			Assert.fail("Could not insert student");
 		}
-		try{
-		Database.executeUpdate(DatabaseUpdatingScripts.insertInto(test));
-		} catch (SQLException e1) {
-			e1.printStackTrace();
-			Assert.fail("Could not insert test");
-		}
+		
+		
 		
 		try {
 			int testid = (int)Database.executeQuery(String.format("SELECT rowid FROM Tests WHERE name='%s' and testdate='%s'",
