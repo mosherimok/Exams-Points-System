@@ -6,16 +6,16 @@ import java.sql.SQLException;
 
 import javax.swing.JOptionPane;
 import actions.MV_Factory.Views;
+import components_utility.CustomizedJTable;
+import components_utility.DefaultSqlTableModel;
 import database.Condition;
-import database.DatabaseActions;
+import database.Database;
+//import database.DatabaseActions;
 import database.DatabaseUpdatingScripts;
 import exceptions.InvalidStructure;
-import mvc_dialogs.Controller;
-import mvc_dialogs.Model;
-import mvc_dialogs.View;
+import mvc_managing_records.Controller;
+import mvc_managing_records.Model;
 import tablesStructures.TableStructure;
-import ui_components.DefaultSqlTableModel;
-import ui_components.CustomizedJTable;
 
 public class ButtonsActions {
 
@@ -24,10 +24,6 @@ public class ButtonsActions {
 	/**
 	 * Add and Modify dialogs View (Mvc)
 	 */
-	
-	/*public ButtonsActions(Views view){
-		this.MVfactory = new MV_Factory(view);
-	}*/
 	
 	public ButtonsActions(CustomizedJTable jtable,Views view){
 		this.jtable = jtable;
@@ -40,14 +36,8 @@ public class ButtonsActions {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				View view = MVfactory.getView();
 				Model model = MVfactory.getAddModel();
-//				if(jtable!=null){
-					Controller controller = new Controller(view, model,jtable);
-//				}
-//				else{
-//					Controller controller = new Controller(view, model);
-//				}
+				Controller controller = new Controller(model,jtable);
 			}
 		};
 	}
@@ -61,16 +51,10 @@ public class ButtonsActions {
 				TableStructure oldStructure = ((DefaultSqlTableModel)jtable.getModel()).
 						getRowStructure(selectedRow);
 				
-				View view = MVfactory.getView();
 				Model model;
 				try {
 					model = MVfactory.getModifyModel(oldStructure);
-//					if(jtable!=null){
-						Controller controller = new Controller(view, model,jtable);
-//					}
-//					else{
-//						Controller controller = new Controller(view, model);
-//					}
+					Controller controller = new Controller(model,jtable);
 				} catch (InvalidStructure ex) {
 					ex.printStackTrace();
 				}
@@ -88,12 +72,12 @@ public class ButtonsActions {
 				TableStructure structure = ((DefaultSqlTableModel)jtable.getModel()).
 						getRowStructure(selectedRow);
 				
-				Condition condition = new Condition(structure.getPrimaryKey());
+				Condition condition = new Condition(structure.getPrimaryKeyValue());
 				
 				String script = DatabaseUpdatingScripts.deleteFrom(MVfactory.getViewType().toString(),
 						condition);
 				try {
-					DatabaseActions.executeUpdate(script);
+					Database.executeUpdate(script);
 					jtable.updateJTableData();
 				} catch (SQLException e1) {
 					e1.printStackTrace();

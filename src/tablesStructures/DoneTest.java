@@ -11,7 +11,17 @@ public class DoneTest extends TableStructure{
 	private Integer grade;
 	
 	public DoneTest(){}
+		
 	
+	
+	public DoneTest(Integer studentid, Integer testid, Integer grade) {
+		setStudentid(studentid);
+		setTestid(testid);
+		setGrade(grade);
+	}
+
+
+
 	public DoneTest(Object[] values){
 		initFromArray(values);
 	}
@@ -79,7 +89,7 @@ public class DoneTest extends TableStructure{
 	}
 
 	@Override
-	public PrimaryKey getPrimaryKey() {
+	public PrimaryKey getPrimaryKeyValue() {
 		PrimaryKey prim = new PrimaryKey();
 		try {
 			prim.addKey("studentID", studentid);

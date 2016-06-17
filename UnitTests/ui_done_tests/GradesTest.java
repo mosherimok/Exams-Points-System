@@ -8,11 +8,12 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import components_done_tests.DoneTestUtilities;
 import database.Condition;
-import database.DatabaseActions;
+import database.Database;
 import database.DatabaseUpdatingScripts;
+import database.StudentUtility;
 import tablesStructures.DoneTest;
-import ui_donetests.Grades;
 
 public class GradesTest {
 
@@ -26,7 +27,7 @@ public class GradesTest {
 	
 	@BeforeClass
 	public static void setCloseConnectionWhenDone(){
-		DatabaseActions.setCloseConnectionWhenDone(false);
+		Database.closeConnectionWhenDoneOperation = false;
 	}
 	
 	@Before
@@ -35,7 +36,7 @@ public class GradesTest {
 		doneTest.setTestid(TEST_ID);
 		doneTest.setGrade(GRADE);
 		try {
-			doneTest.setStudentid(Grades.getStudentID(F_NAME,L_NAME));
+			doneTest.setStudentid(StudentUtility.getStudentIDbyFullName(F_NAME,L_NAME));
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -44,12 +45,12 @@ public class GradesTest {
 	@Test
 	public void gradeShouldBeAdd(){
 		try {			
-			Grades.addGradesToDoneTest(doneTest);
+			DoneTestUtilities.addDoneTest(doneTest);
 			
 			String currentGradeScript = String.format("SELECT %s FROM %s WHERE %s = %d AND %s = %d",
 					"grade",TABLE_NAME,"testid",TEST_ID,"StudentID",STUDENT_ID);
 			
-			Object[][] grade = DatabaseActions.getAllQueryData(currentGradeScript);
+			Object[][] grade = Database.executeQuery(currentGradeScript);
 			System.out.println(grade.length);
 			Assert.assertTrue("Grade did not add to this test",grade.length==1);
 		} catch (SQLException e) {
@@ -60,10 +61,10 @@ public class GradesTest {
 	@After
 	public void deleteGrade(){
 		Condition condition = new Condition();
-		condition.addCondition(doneTest.getPrimaryKey());
+		condition.addCondition(doneTest.getPrimaryKeyValue());
 		try {
-			DatabaseActions.executeUpdate(DatabaseUpdatingScripts.deleteFrom(TABLE_NAME,condition));
-			Object[][] doneTest = DatabaseActions.getAllQueryData("SELECT * FROM DoneTests WHERE " + 
+			Database.executeQuery(DatabaseUpdatingScripts.deleteFrom(TABLE_NAME,condition));
+			Object[][] doneTest = Database.executeQuery("SELECT * FROM DoneTests WHERE " + 
 								"studentID = " + STUDENT_ID);
 			Assert.assertTrue("Done test didn't deleted", doneTest.length==0);
 		} catch (SQLException e) {
@@ -73,8 +74,8 @@ public class GradesTest {
 	
 	@AfterClass
 	public static void closeStuff(){
-		DatabaseActions.setCloseConnectionWhenDone(true);
-		DatabaseActions.closeStuff();
+		Database.closeConnectionWhenDoneOperation = true;
+		Database.closeConnection();
 	}
 	
 }

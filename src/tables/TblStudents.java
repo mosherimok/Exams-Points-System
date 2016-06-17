@@ -3,10 +3,6 @@ package tables;
 import tablesStructures.Student;
 
 public class TblStudents extends Table{
-	
-	/*public TblStudents() {
-		super("Students",new String[]{"id"},"Student");
-	}*/
 
 	@Override
 	public String[] getColumnsIdentifiers() {
@@ -14,18 +10,8 @@ public class TblStudents extends Table{
 	}
 
 	@Override
-	public Class<?>[] getColumnsType() {
-		return new Class<?>[]{int.class,String.class,String.class,short.class,int.class};
-	}
-
-	@Override
 	public String[] getColumnsLabels() {
 		return new String[]{"תז","שם פרטי","שם משפחה","שנת קבלה","נקודות"};
-	}
-
-	@Override
-	public int getColumnsCount() {
-		return 5;
 	}
 
 	@Override

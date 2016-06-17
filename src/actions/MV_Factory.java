@@ -2,23 +2,21 @@ package actions;
 
 import java.sql.SQLException;
 
-import database.DatabaseActions;
+import database.DatabaseUtilities;
+//import database.DatabaseActions;
 import exceptions.InvalidStructure;
-import mv_StudentManagingDialog.ModelAddStudent;
-import mv_StudentManagingDialog.ModelModifyStudent;
-import mv_StudentManagingDialog.ViewStudentRecord;
-import mv_TestCategoriesManagingDialog.ModelAddTestCategory;
-import mv_TestCategoriesManagingDialog.ModelModifyTestCategory;
-import mv_TestCategoriesManagingDialog.ViewTestCategoryRecord;
-import mv_TestsManagingDialog.ModelAddTest;
-import mv_TestsManagingDialog.ModelModifyTest;
-import mv_TestsManagingDialog.ViewTestRecord;
-import mvc_dialogs.Model;
-import mvc_dialogs.View;
+import mvc_managing_records.Model;
+import mvc_managing_records.View;
 import tablesStructures.Student;
 import tablesStructures.TableStructure;
 import tablesStructures.Test;
 import tablesStructures.TestCategory;
+import ui_students.ModelDialogStudent;
+import ui_students.ViewDialogStudent;
+import ui_tests.ModelTest;
+import ui_tests.ViewTestRecord;
+import ui_tests_categories.ModelTestCategory;
+import ui_tests_categories.ViewTestCategoryRecord;
 
 public class MV_Factory {
 	
@@ -32,14 +30,14 @@ public class MV_Factory {
 		this.viewType = view;
 	}
 	
-	public View getView(){
+	private View getView(){
 		switch(viewType){
 		case Students:
-			return new ViewStudentRecord();
+			return new ViewDialogStudent();
 		case Tests:
 			String[] categories = null;
 			try {
-				categories = DatabaseActions.getDataOfColumnIdentifier(
+				categories = DatabaseUtilities.getDataOfColumnIdentifier(
 						"TestsCategories", "CategoryName",String.class);
 			} catch (SQLException e) {
 				e.printStackTrace();
@@ -55,11 +53,11 @@ public class MV_Factory {
 	public Model getAddModel(){
 		switch(viewType){
 			case Students:
-				return new ModelAddStudent();
+				return new ModelDialogStudent(getView());
 			case Tests:
-				return new ModelAddTest();
+				return new ModelTest(getView());
 			case TestsCategories:
-				return new ModelAddTestCategory();
+				return new ModelTestCategory(getView());
 			default:
 				return null;
 		}
@@ -67,20 +65,20 @@ public class MV_Factory {
 	
 	public Model getModifyModel(TableStructure oldStructure) throws InvalidStructure{
 		switch(viewType){
-		case Students:
-				if(!(oldStructure instanceof Student))
-					throw new InvalidStructure("Student structure expected!");
-			return new ModelModifyStudent((Student)oldStructure);
-		case Tests:
-				if(!(oldStructure instanceof Test))
-					throw new InvalidStructure("Test structure expected!");
-			return new ModelModifyTest((Test)oldStructure);
-		case TestsCategories:
-				if(!(oldStructure instanceof TestCategory))
-					throw new InvalidStructure("TestCategory structure expected!");
-			return new ModelModifyTestCategory((TestCategory)oldStructure);
-		default:
-			return null;
+			case Students:
+					if(!(oldStructure instanceof Student))
+						throw new InvalidStructure("Student structure expected!");
+				return new ModelDialogStudent(getView(), oldStructure);
+			case Tests:
+					if(!(oldStructure instanceof Test))
+						throw new InvalidStructure("Test structure expected!");
+				return new ModelTest(getView(),oldStructure);
+			case TestsCategories:
+					if(!(oldStructure instanceof TestCategory))
+						throw new InvalidStructure("TestCategory structure expected!");
+				return new ModelTestCategory(getView(),oldStructure);
+			default:
+				return null;
 		}
 	}
 	

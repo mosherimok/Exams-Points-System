@@ -2,6 +2,8 @@ package ui_donetests_components;
 
 import javax.swing.DefaultListModel;
 
+import components_done_tests.Examinee;
+
 public class ExmainesDefaultListModel extends DefaultListModel<Examinee> {
 
 	private static final long serialVersionUID = 1L;

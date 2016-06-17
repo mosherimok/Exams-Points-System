@@ -8,19 +8,19 @@ import tables.Table;
 
 public abstract class TableStructure implements Iterable<Object>{
 	
-	public abstract String getTableName();
+	public String getTableName(){
+		String className=getClass().getSimpleName();
+		int length = className.length();
+		return className.charAt(length-1)=='y'?className.substring(0,length-1)+"ies":className;
+	}
 	
-	public abstract PrimaryKey getPrimaryKey();
+	public abstract PrimaryKey getPrimaryKeyValue();
 	
 	public abstract Object[] getValues();
 	
 	public abstract void initFromArray(Object[] values);
 	
 	public abstract Table getTableObject();
-	
-	public static Table getTableObject(TableStructure structure){
-		return structure.getTableObject();
-	}
 	
 	//Prototype pattern based.
 	public static TableStructure createObjectByType(String structType) throws InvalidStructure{

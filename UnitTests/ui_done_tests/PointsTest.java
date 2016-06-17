@@ -1,7 +1,6 @@
 package ui_done_tests;
 
 import java.sql.SQLException;
-
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -9,83 +8,92 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import components_done_tests.DoneTestUtilities;
+
 import database.Condition;
-import database.DatabaseActions;
+import database.Database;
 import database.DatabaseUpdatingScripts;
+import tablesStructures.DoneTest;
 import tablesStructures.Student;
-import ui_donetests.Points;
 
 public class PointsTest {
 
-	private static final int STUDENT_ID = 318358587;
-	private final int TEST_ID = 1;
 	private final int GRADE = 95;
-	private final int EXPECTED_POINTS = 10;
-	private int previousPoints;
+	private final int EXPECTED_POINTS = 60;
 	private static Student student;
+	private static tablesStructures.Test test;
 	private static Condition condition;
 	
 	@BeforeClass
-	public static void initStudent(){
-		student = new Student();
+	public static void initStuff(){
+		Database.closeConnectionWhenDoneOperation = false;
 		
-		condition = new Condition();
-		condition.addCondition("id", STUDENT_ID);
+		final int STUDENT_ID = 123456789;
+		final String STUDENT_F_NAME = "Test";
+		final String STUDENT_L_NAME ="Test";
+		final short RECEPTION_YEAR = 2015;
+		final int POINTS = 0;
 		
-		DatabaseActions.setCloseConnectionWhenDone(false);
+		student = new Student(STUDENT_ID,STUDENT_F_NAME,STUDENT_F_NAME,RECEPTION_YEAR,POINTS);
+		condition = new Condition(student.getPrimaryKeyValue());
+		
+		final String TEST_NAME = "TestForTesting";
+		final String TEST_CATEGORY = "воша";
+		final String TEST_DATE = "2015-1-1";
+		
+		test = new tablesStructures.Test(TEST_NAME,TEST_CATEGORY,TEST_DATE);
+		
+		try {
+			Database.executeUpdate(DatabaseUpdatingScripts.insertInto(student));
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+			Assert.fail("Could not insert student");
+		}
+		try{
+		Database.executeUpdate(DatabaseUpdatingScripts.insertInto(test));
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+			Assert.fail("Could not insert test");
+		}
+		
+		try {
+			int testid = (int)Database.executeQuery(String.format("SELECT rowid FROM Tests WHERE name='%s' and testdate='%s'",
+					TEST_NAME,TEST_DATE))[0][0];
+			test.setTestid(testid);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			Assert.fail("Could not retrieve the testID");
+		}
+		
 	}
 	
 	@Before
 	public void resetPoints(){
 		try {
-			String pointsScript = "SELECT points FROM Students WHERE ID = " + 
-					STUDENT_ID;
-			previousPoints = (int) DatabaseActions.
-					getAllQueryData(pointsScript)[0][0];
-			
 			student.setPoints(0);
 			String scriptUpdate = DatabaseUpdatingScripts.updateTable(student, condition);
-			DatabaseActions.executeUpdate(scriptUpdate);
+			Database.executeUpdate(scriptUpdate);
 		
-			int currentPoints = (int) DatabaseActions.
-					getAllQueryData(pointsScript)[0][0];
+			String pointsScript = "SELECT points FROM Students WHERE ID = " + 
+					student.getId();
+			int currentPoints = (int) Database.executeQuery(pointsScript)[0][0];
 			
 			Assert.assertTrue("Points did not reset",currentPoints==0);
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		/*StatementHandle handle = new StatementHandle() {
 			
-			@Override
-			public void handle(Statement statement) throws SQLException {
-				ResultSet result = statement.executeQuery("SELECT points FROM Students WHERE ID = " + 
-						STUDENT_ID);
-				result.next();
-				
-				previousPoints = result.getInt(1);
-				
-				student.setPoints(0);
-				String scriptUpdate = DatabaseUpdatingScripts.updateTable(student, condition);
-				
-				result = statement.executeQuery("SELECT points FROM Students WHERE ID = " + STUDENT_ID);
-				
-				result.next();
-				Assert.assertTrue("Points did not reset",result.getInt(1)==0);
-			}
-		};*/
-			
-
 	}
 	
 	
 	@Test
 	public void pointsShouldBeUpdate(){
 		try {
-			Points.updatePoints(TEST_ID, STUDENT_ID, GRADE);
+			DoneTestUtilities.addDoneTest(new DoneTest(student.getId(),test.getTestid(),GRADE));
 			
-			String scriptValidate = "SELECT points FROM Students WHERE ID = " + STUDENT_ID;
-			Object[][] points = DatabaseActions.getAllQueryData(scriptValidate);
+			String scriptValidate = "SELECT points FROM Students WHERE ID = " + student.getId();
+			Object[][] points = Database.executeQuery(scriptValidate);
 			Assert.assertEquals("Points did not updated",
 					EXPECTED_POINTS,(int)points[0][0]);
 		} catch (SQLException e) {
@@ -93,40 +101,27 @@ public class PointsTest {
 			e.printStackTrace();
 		}
 		
-		
-		/*StatementHandle handle = new StatementHandle() {
-			
-			@Override
-			public void handle(Statement stmt) throws SQLException {
-				ResultSet result = stmt.executeQuery(scriptValidate);
-				result.next();
-				Assert.assertEquals("Points did not updated",
-						EXPECTED_POINTS,result.getInt(1));
-			}
-		};
-		
-		DatabaseActions.executeQuery(handle);
-		*/
 	}
 	
-	@After
-	public void restorePoints(){
-		Condition condition = new Condition();
-		condition.addCondition("ID", STUDENT_ID);
-		Student student = new Student();
-		student.setPoints(previousPoints);
-		try {
-			DatabaseActions.executeUpdate(DatabaseUpdatingScripts.updateTable(student, condition));
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
 	
 	@AfterClass
 	public static void setCloseConnectionWhenDone(){
-		DatabaseActions.setCloseConnectionWhenDone(true);
-		DatabaseActions.closeStuff();
+		String script = "DELETE FROM Students WHERE ID=?";
+		try {
+			Database.executeSinglePreparedStatement(script,new Object[]{student.getId()});
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		script = "DELETE FROM Tests WHERE rowid=?";
+		try {
+			Database.executeSinglePreparedStatement(script,new Object[]{test.getTestid()});
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		finally{
+			Database.closeConnectionWhenDoneOperation = true;
+			Database.closeConnection();
+		}
 	}
 	
 }

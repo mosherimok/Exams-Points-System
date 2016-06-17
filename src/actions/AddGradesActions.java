@@ -5,7 +5,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JTable;
 
-import ui_donetests.AddGradesToTestJDialog;
+import ui_donetests_components.JFrameAddGradesToTest;
 
 public class AddGradesActions {
 
@@ -16,7 +16,7 @@ public class AddGradesActions {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				int testid = (int) table.getValueAt(table.getSelectedRow(), 0);
-				new AddGradesToTestJDialog(testid);
+				new JFrameAddGradesToTest(testid);
 			}
 		};
 	}

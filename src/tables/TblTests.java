@@ -1,7 +1,5 @@
 package tables;
 
-import java.util.Date;
-
 import tablesStructures.Test;
 
 public class TblTests extends Table{
@@ -25,18 +23,8 @@ public class TblTests extends Table{
 	}
 
 	@Override
-	public Class<?>[] getColumnsType() {
-		return new Class<?>[]{int.class,String.class,String.class,Date.class};
-	}
-
-	@Override
 	public String[] getColumnsLabels() {
 		return new String[]{"מזהה מבחן","שם מבחן","קטגורית מבחן","תאריך מבחן"};
-	}
-
-	@Override
-	public int getColumnsCount() {
-		return 4;
 	}
 
 	@Override
@@ -48,11 +36,6 @@ public class TblTests extends Table{
 	public Test createTableStructure(Object[] data) {
 		return new Test(data);
 	}
-	
-	/*@Override
-	public String getSelectAllScript() {
-		return "SELECT rowid,* FROM Tests limit 5";
-	}*/
 	
 	@Override
 	public String getSelectAllScript(){

@@ -35,7 +35,7 @@ public class TestDatabaseUpdatingScripts {
 	@Test
 	public void testUpdateTable(){
 		student.setFirstName("Gershon");
-		Condition condition = new Condition(student.getPrimaryKey());
+		Condition condition = new Condition(student.getPrimaryKeyValue());
 //		condition.addCondition(student.getPrimaryKeyName()[0], student.getPrimaryKeyValue()[0]);
 		String script = DatabaseUpdatingScripts.updateTable(student, condition);
 		Assert.assertEquals("Script is not valid",EXPECTED_UPDATE,script);
@@ -46,7 +46,7 @@ public class TestDatabaseUpdatingScripts {
 		Student student = new Student();
 		student.setPoints(25);
 		student.setId(213931777);
-		Condition condition = new Condition(student.getPrimaryKey());
+		Condition condition = new Condition(student.getPrimaryKeyValue());
 //		condition.addCondition(student.getPrimaryKeyName()[0],"213931777");
 		String script = DatabaseUpdatingScripts.updateTable(student, condition);
 		Assert.assertEquals("Script is not valid",EXPECTED_UPDATE_BY_COLUMNS,script);

@@ -71,7 +71,7 @@ public class TestCategory extends TableStructure{
 
 
 	@Override
-	public PrimaryKey getPrimaryKey() {
+	public PrimaryKey getPrimaryKeyValue() {
 		return new PrimaryKey("categoryName",categoryName);
 	}
 

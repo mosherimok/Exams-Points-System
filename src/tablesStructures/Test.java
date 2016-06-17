@@ -16,6 +16,21 @@ public class Test extends TableStructure{
 	
 	public Test(){}
 	
+	public Test(Integer testid, String name, String category, String testDate) {
+		setTestid(testid);
+		setName(name);
+		setCategory(category);
+		setTestDate(testDate);
+	}
+	
+	public Test(String name, String category, String testDate) {
+		setName(name);
+		setCategory(category);
+		setTestDate(testDate);
+	}
+
+
+
 	public Test(Object[] values){
 		initFromArray(values);
 	}
@@ -91,7 +106,7 @@ public class Test extends TableStructure{
 	}
 
 	@Override
-	public PrimaryKey getPrimaryKey() {
+	public PrimaryKey getPrimaryKeyValue() {
 		PrimaryKey prim = new PrimaryKey();
 		prim.addKey("category", category);
 		prim.addKey("testDate", testDate);
