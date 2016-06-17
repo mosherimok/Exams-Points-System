@@ -6,13 +6,9 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="lib" path="lib/sqlite-jdbc-3.8.11.2.jar"/>
-	<classpathentry kind="lib" path="C:/Users/משה/Desktop/MegaSyncManual/Tools and softwares/Programming JDK and more/Java/3d parties/Apache POI/poi-3.14-20160307.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="jar:file:/C:/Users/משה/Desktop/MegaSyncManual/Tools%20and%20softwares/Programming%20JDK%20and%20more/Java/3d%20parties/Apache%20POI/poi-bin-3.14.zip!/poi-3.14/docs/apidocs"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="C:/Users/משה/Desktop/MegaSyncManual/Tools and softwares/Programming JDK and more/Java/3d parties/Apache POI/poi-ooxml-3.14-20160307.jar"/>
-	<classpathentry kind="lib" path="C:/Users/משה/Desktop/MegaSyncManual/Tools and softwares/Programming JDK and more/Java/3d parties/Apache POI/xmlbeans-2.6.0.jar"/>
-	<classpathentry kind="lib" path="C:/Users/משה/Desktop/MegaSyncManual/Tools and softwares/Programming JDK and more/Java/3d parties/Apache POI/poi-ooxml-schemas-3.14-20160307.jar"/>
+	<classpathentry kind="lib" path="lib/poi-3.14-20160307.jar"/>
+	<classpathentry kind="lib" path="lib/poi-ooxml-3.14-20160307.jar"/>
+	<classpathentry kind="lib" path="lib/poi-ooxml-schemas-3.14-20160307.jar"/>
+	<classpathentry kind="lib" path="lib/xmlbeans-2.6.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
